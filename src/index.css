@@ -1,0 +1,84 @@
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+        'Droid Sans', 'Helvetica Neue', sans-serif;
+    line-height: 24px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Week */
+
+.week {
+    display: grid;
+    grid-template-columns: 200px auto;
+    grid-template-rows: 40px auto;
+    grid-template-areas:
+        'week-number week-header'
+        'week-sidebar week-content';
+    column-gap: 20px;
+    row-gap: 5px;
+}
+
+/* Week: Header */
+
+.week-header {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    grid-area: week-header;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+/* Week: Sidebar */
+
+.week-sidebar {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    grid-area: week-sidebar;
+}
+
+.week-sidebar li {
+    text-align: right;
+}
+
+.week-sidebar li,
+.week-content li {
+    padding: 4px 0;
+}
+
+/* Week: Content */
+
+.week-content {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    grid-area: week-content;
+
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+}
+
+.week-content li {
+    text-align: center;
+}
+
+.week-content li:hover {
+    background-color: whitesmoke;
+}
+
+/* Week: Day */
+
+.week-day {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
