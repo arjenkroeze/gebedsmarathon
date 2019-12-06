@@ -1,9 +1,30 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import AppContext from './context/AppContext'
+import { database } from './utilities/firebase'
 import Week from './Week'
 
 function App() {
-    const startDate = new Date('2020-3-1')
-    const endDate = new Date('2020-3-23')
+    const startDate = new Date('2020-3-1 11:00')
+    const endDate = new Date('2020-3-22 10:00')
+
+    const [registrations, setRegistrations] = useState([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const registrationsSnapshot = await database.collection('registrations').get()
+            const results = []
+            registrationsSnapshot.forEach(doc => {
+                results.push({ id: doc.id, ...doc.data() })
+            })
+            setRegistrations(results)
+        }
+
+        fetchData()
+    }, [])
+
+    const [modal, setModal] = useState(false)
+    const toggleModal = () => setModal(!modal)
+    console.log(modal)
 
     // Work with full weeks, so start the week always on a monday
     // Therefore we copy the startDate and change it to the monday before
@@ -53,7 +74,7 @@ function App() {
         }
     }
 
-    return <>{weeks}</>
+    return <AppContext.Provider value={{ startDate, endDate, registrations, setModal }}>{weeks}</AppContext.Provider>
 }
 
 export default App
