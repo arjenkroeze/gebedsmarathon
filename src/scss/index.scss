@@ -1,3 +1,8 @@
+$blue: rgb(28, 61, 207);
+$red: rgb(207, 40, 28);
+$green: rgb(40, 167, 69);
+$yellow: rgb(255, 193, 7);
+
 *,
 *:after,
 *:before {
@@ -7,8 +12,8 @@
 body {
     margin: 0;
     padding: 40px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-        'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+        'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     font-size: 14px;
     line-height: 24px;
     -webkit-font-smoothing: antialiased;
@@ -32,8 +37,39 @@ body {
 
 .week-cell {
     width: 155px;
-    padding: 5px 0;
+    padding: 5px;
     text-align: center;
+
+    &.is-available {
+        background-color: mix($green, #fff, 30%);
+
+        &:not(.is-history):hover {
+            background-color: mix($green, #fff, 40%);
+        }
+    }
+
+    &.is-unavailable {
+        background-color: whitesmoke;
+    }
+
+    &.is-registered {
+        background-color: rgba($yellow, 0.4);
+
+        &:hover {
+            background-color: rgba($yellow, 0.55);
+        }
+    }
+
+    &.is-active {
+        box-shadow: 0 0 8px 3px rgba($green, 0.5);
+        transform: scale(1.1);
+        color: #fff;
+        z-index: 5;
+    }
+
+    &.is-history {
+        opacity: 0.5;
+    }
 }
 
 .week-cell-header {
@@ -45,40 +81,24 @@ body {
 /* Registration */
 
 .registration {
-    max-width: 155px;
+    max-width: 139px;
     margin: auto;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding: 5px 10px;
-    line-height: 1.2;
+    line-height: 1;
 }
 
-.registration + .registration {
-    border-top: 1px solid darken(rgba(255, 193, 7, 0.4), 10%);
+.registration-name {
+    padding: 0 5px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.registration-count {
+    font-size: 13px;
 }
 
 /* Utilities */
-
-.bg-light {
-    background-color: whitesmoke !important;
-}
-
-.bg-green {
-    background-color: rgba(40, 167, 69, 0.2) !important;
-
-    &:hover {
-        background-color: rgba(40, 167, 69, 0.3) !important;
-    }
-}
-
-.bg-yellow {
-    background-color: rgba(255, 193, 7, 0.4) !important;
-
-    &:hover {
-        background-color: rgba(255, 193, 7, 0.5) !important;
-    }
-}
 
 .font-weight-bold {
     font-weight: 600;

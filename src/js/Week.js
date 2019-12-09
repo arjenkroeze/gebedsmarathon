@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import AppContext from './context/AppContext'
 import WeekContext from './context/WeekContext'
-import Day from './Day'
+import Hour from './Hour'
 
 function Week({ startDate, endDate }) {
     const { registrations } = useContext(AppContext)
@@ -76,9 +76,9 @@ function Week({ startDate, endDate }) {
 
             // Render a column for every day
             days.push(
-                <Day
+                <Hour
                     key={dayDate.getTime()}
-                    date={dayDate}
+                    datetime={dayDate}
                     hour={i}
                     registrations={filteredRegistrations}
                 />
