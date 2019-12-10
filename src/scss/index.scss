@@ -1,7 +1,18 @@
-$blue: rgb(28, 61, 207);
+@import '../../node_modules/bootstrap/scss/functions';
+@import '../../node_modules/bootstrap/scss/variables';
+
+$blue: rgb(22, 88, 231);
 $red: rgb(207, 40, 28);
 $green: rgb(40, 167, 69);
 $yellow: rgb(255, 193, 7);
+
+$modal-fade-transform: none;
+$modal-transition: unset;
+
+@import '../../node_modules/bootstrap/scss/mixins';
+@import '../../node_modules/bootstrap/scss/transitions';
+@import '../../node_modules/bootstrap/scss/modal';
+@import '../../node_modules/bootstrap/scss/close';
 
 *,
 *:after,
@@ -9,18 +20,112 @@ $yellow: rgb(255, 193, 7);
     box-sizing: border-box;
 }
 
+html {
+    font-size: 14px;
+}
+
 body {
     margin: 0;
     padding: 40px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
         'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-    font-size: 14px;
-    line-height: 24px;
+    line-height: 22px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Week */
+p {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+input[type='text'],
+input[type='email'] {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 20px;
+
+    &:read-only {
+        background-color: #f0f0f0;
+        color: #777;
+    }
+
+    &:focus {
+        outline: -webkit-focus-ring-color auto 4px;
+    }
+}
+
+.button {
+    display: inline-flex;
+    padding: 12px 20px;
+    background: #ddd;
+    border: 0;
+    border-radius: 3px;
+    color: #444;
+    font-size: 16px;
+    line-height: 20px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #e9e9e9;
+    }
+}
+
+.button-primary {
+    background-color: $blue;
+    font-weight: 600;
+    color: #fff;
+
+    &:hover,
+    &:focus {
+        background-color: darken($blue, 10%);
+    }
+}
+
+// Modal
+
+.modal-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.modal-body,
+.modal-header {
+    padding: 20px;
+}
+
+// Forms
+
+.form-grid {
+    display: grid;
+    grid-auto-flow: column;
+    column-gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group-help {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    line-height: 18px;
+    color: #777;
+}
+
+// Week
 
 .week {
     width: 1200px;
@@ -78,7 +183,7 @@ body {
     text-transform: capitalize;
 }
 
-/* Registration */
+// Registration
 
 .registration {
     max-width: 139px;
@@ -98,7 +203,15 @@ body {
     font-size: 13px;
 }
 
-/* Utilities */
+// Utilities
+
+.d-flex {
+    display: flex !important;
+}
+
+.justify-content-between {
+    justify-content: space-between !important;
+}
 
 .font-weight-bold {
     font-weight: 600;

@@ -1,41 +1,40 @@
-import React, { useContext, useEffect, useState } from 'react'
+import classNames from 'classnames'
+import React, { useContext } from 'react'
 import AppContext from './context/AppContext'
 
-const Hour = ({ datetime, registrations = [] }) => {
-    const { startDate, endDate, setModal } = useContext(AppContext)
-    const [classNames, setClassNames] = useState(['week-cell'])
+const Hour = ({
+    datetime,
+    isActive,
+    isDisabled,
+    isHistory,
+    registrant = '',
+    registrationsCount,
+}) => {
+    const { setSelectedDate, setModal } = useContext(AppContext)
+    const classes = classNames(
+        'week-cell',
+        registrationsCount ? 'is-registered' : 'is-available',
+        isHistory ? 'is-history' : false,
+        isActive ? 'is-active' : false
+    )
 
-    useEffect(() => {
-        const now = Date.now()
+    if (isDisabled) {
+        return <td className="week-cell is-unavailable"></td>
+    }
 
-        // Render cells outside the startDate and endDate
-        if (startDate.getTime() > datetime.getTime() || endDate.getTime() < datetime.getTime()) {
-            setClassNames(state => [...state, 'is-unavailable'])
+    const handleClick = () => {
+        if (isHistory) {
             return
         }
 
-        if (registrations.length > 0) {
-            setClassNames(state => [...state, 'is-registered'])
-        } else {
-            setClassNames(state => [...state, 'is-available'])
-        }
-
-        if (now > datetime.getTime() + 3600000) {
-            setClassNames(state => [...state, 'is-history'])
-        }
-
-        if (now > datetime.getTime() && now < datetime.getTime() + 3600000) {
-            setClassNames(state => [...state, 'is-active'])
-        }
-    }, [datetime, startDate, endDate, registrations])
+        setSelectedDate(datetime)
+        setModal(true)
+    }
 
     return (
-        <td
-            className={classNames.join(' ')}
-            onClick={() => (!classNames.includes('is-history') ? setModal(true) : null)}
-        >
-            {registrations.length > 0 && (
-                <Registration name={registrations[0].name} count={registrations.length} />
+        <td className={classes} onClick={handleClick}>
+            {registrationsCount > 0 && (
+                <Registration name={registrant} count={registrationsCount} />
             )}
         </td>
     )

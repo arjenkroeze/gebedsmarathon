@@ -1,29 +1,33 @@
 import React, { useEffect, useState } from 'react'
 import AppContext from './context/AppContext'
+import ModalSignUp from './ModalSignUp'
+import Stats from './Stats'
 import { database } from './utilities/firebase'
 import Week from './Week'
 
 function App() {
     const startDate = new Date('2020-3-1 11:00')
     const endDate = new Date('2020-3-22 10:00')
-
     const [registrations, setRegistrations] = useState([])
 
     // EFfect to fetch all registrations from the database
     useEffect(() => {
         const fetchData = async () => {
-            const registrationsSnapshot = await database.collection('registrations').get()
-            const results = []
-            registrationsSnapshot.forEach(doc => {
-                results.push({ id: doc.id, ...doc.data() })
+            // Get the snapshot from the Firestore
+            database.collection('registrations').onSnapshot(querySnapshot => {
+                const results = []
+                querySnapshot.forEach(doc => {
+                    results.push({ id: doc.id, ...doc.data() })
+                })
+                setRegistrations(results)
             })
-            setRegistrations(results)
         }
 
         fetchData()
     }, [])
 
     const [modal, setModal] = useState(false)
+    const [selectedDate, setSelectedDate] = useState(new Date())
     const toggleModal = () => setModal(!modal)
 
     // Work with full weeks, so start the week always on a monday.
@@ -52,7 +56,9 @@ function App() {
     }
 
     // Calculate the difference in days between the startDate and endDate
-    const numberOfDays = (endDateCopy.getTime() - startDateCopy.getTime()) / 1000 / 60 / 60 / 24
+    const numberOfDays = Math.ceil(
+        (endDateCopy.getTime() - startDateCopy.getTime()) / 1000 / 60 / 60 / 24
+    )
 
     // Set an array to store the weeks
     const weeks = []
@@ -73,13 +79,18 @@ function App() {
         }
     }
 
-    if (!registrations.length) {
-        return null
-    }
+    // if (!registrations.length) {
+    //     throw new Error(`Unable to fetch registrations. Check your internet settings.`)
+    // }
 
     return (
-        <AppContext.Provider value={{ startDate, endDate, registrations, setModal }}>
+        <AppContext.Provider
+            value={{ startDate, endDate, registrations, setModal, setSelectedDate }}
+        >
+            <h1>Gebedsrooster</h1>
+            <Stats />
             {weeks}
+            <ModalSignUp isOpen={modal} toggleModal={toggleModal} selectedDate={selectedDate} />
         </AppContext.Provider>
     )
 }
