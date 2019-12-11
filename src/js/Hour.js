@@ -28,7 +28,7 @@ const Hour = ({
         }
 
         setSelectedDate(datetime)
-        setModal(true)
+        setModal(registrationsCount > 0 ? 'registrations' : 'signup')
     }
 
     return (

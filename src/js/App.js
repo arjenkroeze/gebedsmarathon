@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import AppContext from './context/AppContext'
+import ModalRegistrations from './ModalRegistrations'
 import ModalSignUp from './ModalSignUp'
 import Stats from './Stats'
 import { database } from './utilities/firebase'
@@ -14,21 +15,24 @@ function App() {
     useEffect(() => {
         const fetchData = async () => {
             // Get the snapshot from the Firestore
-            database.collection('registrations').onSnapshot(querySnapshot => {
-                const results = []
-                querySnapshot.forEach(doc => {
-                    results.push({ id: doc.id, ...doc.data() })
+            database
+                .collection('registrations')
+                .orderBy('created', 'asc')
+                .onSnapshot(querySnapshot => {
+                    const results = []
+                    querySnapshot.forEach(doc => {
+                        results.push({ id: doc.id, ...doc.data() })
+                    })
+                    setRegistrations(results)
                 })
-                setRegistrations(results)
-            })
         }
 
         fetchData()
     }, [])
 
-    const [modal, setModal] = useState(false)
     const [selectedDate, setSelectedDate] = useState(new Date())
-    const toggleModal = () => setModal(!modal)
+    const [modal, setModal] = useState(null)
+    const toggleModal = () => setModal(null)
 
     // Work with full weeks, so start the week always on a monday.
     // Create a new date so this can be changed to the monday before the startDate.
@@ -79,18 +83,15 @@ function App() {
         }
     }
 
-    // if (!registrations.length) {
-    //     throw new Error(`Unable to fetch registrations. Check your internet settings.`)
-    // }
-
     return (
         <AppContext.Provider
-            value={{ startDate, endDate, registrations, setModal, setSelectedDate }}
+            value={{ startDate, endDate, registrations, setModal, selectedDate, setSelectedDate }}
         >
             <h1>Gebedsrooster</h1>
             <Stats />
             {weeks}
-            <ModalSignUp isOpen={modal} toggleModal={toggleModal} selectedDate={selectedDate} />
+            <ModalSignUp isOpen={modal === 'signup'} toggleModal={toggleModal} />
+            <ModalRegistrations isOpen={modal === 'registrations'} toggleModal={toggleModal} />
         </AppContext.Provider>
     )
 }

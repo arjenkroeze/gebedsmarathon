@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
+import AppContext from './context/AppContext'
 import { database } from './utilities/firebase'
 
 const initialValues = {
@@ -8,12 +9,16 @@ const initialValues = {
     email: '',
 }
 
-const ModalSignUp = ({ isOpen, toggleModal, selectedDate }) => {
+const ModalSignUp = ({ isOpen, toggleModal }) => {
     const [values, setValues] = useState(initialValues)
+    const { selectedDate } = useContext(AppContext)
     const nameInput = useRef(null)
 
     const handleChange = event => {
-        setValues({ ...values, [event.target.name]: [event.target.value] })
+        setValues({
+            ...values,
+            [event.target.name]: event.target.value,
+        })
     }
 
     const handleSubmit = async event => {
@@ -26,6 +31,7 @@ const ModalSignUp = ({ isOpen, toggleModal, selectedDate }) => {
         const registrationsRef = database.collection('registrations')
 
         await registrationsRef.add({
+            created: Date.now(),
             date: selectedDate,
             name: `${values.firstName} ${values.lastName}`,
             email: values.email,
@@ -58,49 +64,55 @@ const ModalSignUp = ({ isOpen, toggleModal, selectedDate }) => {
         1}.00 uur`
 
     return (
-        <Modal isOpen={isOpen} toggle={toggleModal} fade={false}>
+        <Modal isOpen={isOpen} toggle={toggleModal} fade={false} centered={true}>
             <ModalBody>
-                <p>
-                    Vul je naam en e-mailadres in. Je naam wordt gebruikt, zodat het zichtbaar is
-                    wie zich heeft ingeschreven. Je e-mailadres wordt enkel gebruikt om je
-                    inschrijving eventueel weer te kunnen annuleren.
-                </p>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="date">Datum en Tijd</label>
-                        <input type="text" readOnly={true} value={formattedDateTime} />
+                        <input
+                            type="text"
+                            className="input"
+                            readOnly={true}
+                            value={formattedDateTime}
+                        />
                     </div>
                     <div className="form-grid">
                         <div className="form-group">
-                            <label htmlFor="firstName">Voornaam</label>
+                            <label htmlFor="firstName">Voornaam *</label>
                             <input
                                 type="text"
                                 id="firstName"
                                 name="firstName"
+                                className="input"
                                 value={values.firstName}
                                 onChange={handleChange}
                                 ref={nameInput}
+                                required={true}
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="lastName">Achternaam</label>
+                            <label htmlFor="lastName">Achternaam *</label>
                             <input
                                 type="text"
                                 id="lastName"
                                 name="lastName"
+                                className="input"
                                 value={values.lastName}
                                 onChange={handleChange}
+                                required={true}
                             />
                         </div>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="email">E-mailadres</label>
+                        <label htmlFor="email">E-mailadres *</label>
                         <input
                             type="email"
                             id="email"
                             name="email"
+                            className="input"
                             value={values.email}
                             onChange={handleChange}
+                            required={true}
                         />
                         <p className="form-group-help">
                             Onthoud je e-mailadres. Deze heb je nodig om inschrijvingen te kunnen
