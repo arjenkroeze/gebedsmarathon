@@ -4,6 +4,7 @@ import Header from './Header'
 import ModalDelete from './ModalDelete'
 import ModalRegistrations from './ModalRegistrations'
 import ModalSignUp from './ModalSignUp'
+import Stats from './Stats'
 import { database } from './utilities/firebase'
 import Week from './Week'
 
@@ -100,6 +101,7 @@ function App() {
             }}
         >
             <Header />
+            <Stats />
             {weeks}
             <ModalSignUp isOpen={modal === 'signup'} toggleModal={toggleModal} />
             <ModalRegistrations isOpen={modal === 'registrations'} toggleModal={toggleModal} />

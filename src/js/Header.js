@@ -1,26 +1,27 @@
 import React, { useContext } from 'react'
 import AppContext from './context/AppContext'
-import Stats from './Stats'
 
 const Header = () => {
     const { startDate, endDate } = useContext(AppContext)
 
-    const dateFormat = {
+    const formattedStartDate = new Intl.DateTimeFormat('nl-NL', {
+        day: 'numeric',
+        month: 'long',
+    }).format(startDate)
+
+    const formattedEndDate = new Intl.DateTimeFormat('nl-NL', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
-    }
-
-    const formattedStartDate = new Intl.DateTimeFormat('nl-NL', dateFormat).format(startDate)
-    const formattedEndDate = new Intl.DateTimeFormat('nl-NL', dateFormat).format(endDate)
+    }).format(endDate)
 
     return (
         <header className="main-header">
-            {/* <h1>Gebedsmarathon</h1> */}
-            {/* <h2>
+            <h1>Gebedsmarathon</h1>
+            <h2>
                 {formattedStartDate} - {formattedEndDate}
-            </h2> */}
-            <Stats />
+            </h2>
+            <button className="button button-primary">Direct inschrijven</button>
         </header>
     )
 }

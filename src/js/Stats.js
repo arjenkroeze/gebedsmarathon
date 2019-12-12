@@ -26,11 +26,16 @@ const Stats = () => {
     const percentageOccupied = Math.floor((hoursBusy / numberOfHours) * 100)
 
     return (
-        <div className="progress">
-            <div className="progress-bar">
-                <div className="progress-bar-fill" style={{ width: `${percentageOccupied}%` }} />
+        <div className="pane">
+            <div className="progress">
+                <div className="progress-bar">
+                    <div
+                        className="progress-bar-fill"
+                        style={{ width: `${percentageOccupied}%` }}
+                    />
+                </div>
+                Er zijn {hoursBusy} van de {numberOfHours} uren bezet ({percentageOccupied}%)
             </div>
-            Er zijn {hoursBusy} van de {numberOfHours} uren bezet ({percentageOccupied}%)
         </div>
     )
 }
