@@ -41,9 +41,9 @@ const Hour = ({
 }
 
 const Registration = ({ name, count }) => (
-    <div className="registration">
-        <div className="registration-name">{name}</div>
-        {count > 1 && <div className="registration-count">en nog {count - 1}</div>}
+    <div className="week-cell-registration">
+        <div className="week-cell-registration-name">{name}</div>
+        {count > 1 && <div className="week-cell-registration-count">en nog {count - 1}</div>}
     </div>
 )
 

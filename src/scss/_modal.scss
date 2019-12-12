@@ -1,0 +1,29 @@
+.modal-content {
+    box-shadow: 0 3px 40px 0 rgba(0, 0, 0, 0.25);
+}
+
+.modal-body,
+.modal-header {
+    padding: 20px;
+}
+
+.modal-header {
+    flex-direction: column;
+    padding-bottom: 0;
+    border-bottom: 0;
+    align-items: center;
+
+    :first-child {
+        margin-bottom: 0;
+        font-size: 18px;
+
+        &::first-letter {
+            text-transform: capitalize;
+        }
+    }
+
+    :nth-child(2) {
+        margin-bottom: 0;
+        font-weight: 500;
+    }
+}

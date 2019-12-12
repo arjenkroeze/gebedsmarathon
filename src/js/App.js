@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import AppContext from './context/AppContext'
+import Header from './Header'
+import ModalDelete from './ModalDelete'
 import ModalRegistrations from './ModalRegistrations'
 import ModalSignUp from './ModalSignUp'
-import Stats from './Stats'
 import { database } from './utilities/firebase'
 import Week from './Week'
 
 function App() {
     const startDate = new Date('2020-3-1 11:00')
     const endDate = new Date('2020-3-22 10:00')
+
+    // State
     const [registrations, setRegistrations] = useState([])
+    const [selectedDate, setSelectedDate] = useState(new Date())
+    const [selectedRegistration, setSelectedRegistration] = useState(null)
+    const [modal, setModal] = useState(null)
 
     // EFfect to fetch all registrations from the database
     useEffect(() => {
         const fetchData = async () => {
-            // Get the snapshot from the Firestore
+            // Listen to the snapshot from the Firestore
             database
                 .collection('registrations')
                 .orderBy('created', 'asc')
@@ -30,32 +36,29 @@ function App() {
         fetchData()
     }, [])
 
-    const [selectedDate, setSelectedDate] = useState(new Date())
-    const [modal, setModal] = useState(null)
     const toggleModal = () => setModal(null)
 
     // Work with full weeks, so start the week always on a monday.
     // Create a new date so this can be changed to the monday before the startDate.
     const startDateCopy = new Date(startDate)
     const startDateCopyDay = startDateCopy.getDay()
-    const monday = 1
+    const startDay = 0 // 1 is monday
 
     // Calculate the difference between the startDate's day and the monday before this date.
     // Then change the startDate to that day.
-    if (startDateCopyDay !== monday) {
-        const offset = [6, 0, 1, 2, 3, 4, 5]
-        startDateCopy.setDate(startDateCopy.getDate() - offset[startDateCopyDay])
+    if (startDateCopyDay !== startDay) {
+        startDateCopy.setDate(startDateCopy.getDate() - startDateCopyDay)
     }
 
     // Create a new date so this can be changed to the sunday after the endDate.
     const endDateCopy = new Date(endDate)
     const endDateCopyDay = endDateCopy.getDay()
-    const sunday = 0
+    const endDay = 6 // 6 is saturday
 
     // Calculate the difference between the endDate's day and the sunday after this date.
     // Then change the endDate to that sunday.
-    if (endDateCopyDay !== sunday) {
-        const offset = [0, 6, 5, 4, 3, 2, 1]
+    if (endDateCopyDay !== endDay) {
+        const offset = [6, 5, 4, 3, 2, 1, 0]
         endDateCopy.setDate(endDateCopy.getDate() + offset[endDateCopyDay])
     }
 
@@ -85,13 +88,22 @@ function App() {
 
     return (
         <AppContext.Provider
-            value={{ startDate, endDate, registrations, setModal, selectedDate, setSelectedDate }}
+            value={{
+                startDate,
+                endDate,
+                registrations,
+                setModal,
+                selectedDate,
+                setSelectedDate,
+                selectedRegistration,
+                setSelectedRegistration,
+            }}
         >
-            <h1>Gebedsrooster</h1>
-            <Stats />
+            <Header />
             {weeks}
             <ModalSignUp isOpen={modal === 'signup'} toggleModal={toggleModal} />
             <ModalRegistrations isOpen={modal === 'registrations'} toggleModal={toggleModal} />
+            <ModalDelete isOpen={modal === 'delete'} toggleModal={toggleModal} />
         </AppContext.Provider>
     )
 }

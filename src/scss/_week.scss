@@ -1,0 +1,81 @@
+.week {
+    width: 1200px;
+    margin: 0 auto 50px;
+    border-spacing: 2px;
+    font-size: 14px;
+}
+
+.week-hour {
+    width: 115px;
+    height: 40px;
+    padding-right: 10px;
+    text-align: right;
+}
+
+.week-cell {
+    width: 155px;
+    padding: 5px;
+    text-align: center;
+
+    &.is-available {
+        background-color: mix($green, #fff, 30%);
+
+        &:not(.is-history):hover {
+            background-color: mix($green, #fff, 40%);
+        }
+    }
+
+    &.is-unavailable {
+        background-color: whitesmoke;
+    }
+
+    &.is-registered {
+        background-color: mix($yellow, #fff, 30%);
+
+        &:hover {
+            background-color: mix($yellow, #fff, 55%);
+        }
+    }
+
+    &.is-active {
+        box-shadow: 0 0 8px 3px rgba($green, 0.5);
+        transform: scale(1.1);
+        z-index: 5;
+
+        &.is-registered {
+            box-shadow: 0 0 12px 3px rgba(darken($yellow, 10%), 0.5);
+        }
+    }
+
+    &.is-history {
+        opacity: 0.5;
+    }
+}
+
+.week-cell-header {
+    height: 40px;
+    padding: 5px;
+    font-weight: 500;
+
+    &::first-letter {
+        text-transform: capitalize;
+    }
+}
+
+.week-cell-registration {
+    max-width: 139px;
+    margin: auto;
+    line-height: 1;
+}
+
+.week-cell-registration-name {
+    padding: 0 5px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.week-cell-registration-count {
+    font-size: 13px;
+}

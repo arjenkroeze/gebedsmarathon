@@ -6,18 +6,6 @@ const Stats = () => {
     const [hoursBusy, setHoursBusy] = useState(0)
     const numberOfHours = Math.abs(startDate - endDate) / 36e5
 
-    const formattedStartDate = new Intl.DateTimeFormat('nl-NL', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    }).format(startDate)
-
-    const formattedEndDate = new Intl.DateTimeFormat('nl-NL', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    }).format(endDate)
-
     // Effect to calculate the number of busy hours
     useEffect(() => {
         const uniqueDates = []
@@ -35,19 +23,15 @@ const Stats = () => {
         setHoursBusy(uniqueRegistrations)
     }, [registrations])
 
+    const percentageOccupied = Math.floor((hoursBusy / numberOfHours) * 100)
+
     return (
-        <dl>
-            <dt>Datum</dt>
-            <dd>
-                {formattedStartDate} - {formattedEndDate}
-            </dd>
-            <dt>Uren</dt>
-            <dd>
-                {hoursBusy} van de {numberOfHours} uren bezet
-            </dd>
-            <dt>Inschrijvingen</dt>
-            <dd>{registrations.length}</dd>
-        </dl>
+        <div className="progress">
+            <div className="progress-bar">
+                <div className="progress-bar-fill" style={{ width: `${percentageOccupied}%` }} />
+            </div>
+            Er zijn {hoursBusy} van de {numberOfHours} uren bezet ({percentageOccupied}%)
+        </div>
     )
 }
 

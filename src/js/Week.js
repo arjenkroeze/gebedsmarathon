@@ -101,6 +101,11 @@ function Week(props) {
         hours.push(<tr key={i}>{days}</tr>)
     }
 
+    // Hide the week if it's history...
+    if (props.endDate.getTime() < Date.now()) {
+        return null
+    }
+
     return (
         <WeekContext.Provider value={{ setHover }}>
             <h2 className="text-center">{`${formattedStartDate} - ${formattedEndDate}`}</h2>

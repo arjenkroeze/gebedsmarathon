@@ -1,0 +1,71 @@
+label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+
+    .button {
+        padding: 0;
+        font-weight: 400;
+    }
+}
+
+form {
+    width: 100%;
+}
+
+.input {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    font-size: 16px;
+    line-height: 20px;
+
+    &:read-only {
+        background-color: #f0f0f0;
+        color: #777;
+    }
+
+    &:focus {
+        outline: -webkit-focus-ring-color auto 4px;
+    }
+}
+
+.input-small {
+    width: 180px;
+    padding: 8px;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+textarea.input {
+    height: 110px;
+    line-height: 1.6;
+}
+
+.form-delete {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: rgba($red, 0.15);
+    border-radius: 3px;
+}
+
+.form-grid {
+    display: grid;
+    grid-auto-flow: column;
+    column-gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group-help {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 18px;
+    color: #777;
+}
