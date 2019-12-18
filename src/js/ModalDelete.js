@@ -74,7 +74,7 @@ const ModalDelete = ({ isOpen, toggleModal }) => {
     }
 
     return (
-        <Modal isOpen={isOpen} toggle={toggleModal} fade={false} centered={true}>
+        <Modal isOpen={isOpen} toggle={toggleModal} centered={true}>
             {deleted ? (
                 <ModalBody>
                     <p>Inschrijving verwijderd. Dit venster kan worden gesloten.</p>

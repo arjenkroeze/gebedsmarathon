@@ -15,6 +15,8 @@ const Header = () => {
         year: 'numeric',
     }).format(endDate)
 
+    const numberOfHours = Math.abs(startDate - endDate) / 36e5
+
     return (
         <header className="main-header">
             <h1>Gebedsmarathon</h1>

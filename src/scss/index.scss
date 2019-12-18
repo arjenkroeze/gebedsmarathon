@@ -5,10 +5,10 @@ $lightgray: rgb(233, 236, 239);
 $blue: rgb(22, 88, 231);
 $red: rgb(207, 40, 28);
 $green: rgb(40, 167, 69);
-$yellow: rgb(255, 193, 7);
+$yellow: rgb(255, 178, 7);
 
 $modal-fade-transform: none;
-$modal-transition: unset;
+$modal-transition: transform 0.2s ease-out;
 
 @import '../../node_modules/bootstrap/scss/mixins';
 @import '../../node_modules/bootstrap/scss/transitions';
@@ -47,7 +47,6 @@ h4,
 h5,
 h6 {
     margin-top: 0;
-    font-weight: 600;
 }
 
 h2 {
@@ -66,7 +65,7 @@ p {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 90vh;
+    min-height: 100vh;
     background-image: url(../img/background-2.jpg);
     background-size: cover;
     background-position: center;
@@ -89,14 +88,16 @@ p {
     }
 
     h1 {
-        margin-bottom: 0;
-        font-size: 60px;
-        font-weight: 300;
-        line-height: 1.4;
+        margin-bottom: 10px;
+        font-family: 'Oswald', sans-serif;
+        font-size: 72px;
+        font-weight: 200;
+        line-height: 1;
     }
 
     h2 {
-        font-size: 28px;
+        font-size: 32px;
+        font-weight: 300;
     }
 
     .button {
@@ -104,15 +105,45 @@ p {
     }
 }
 
-.pane {
+.stats {
     margin-bottom: 100px;
-    padding: 100px 0;
-    background-color: #e6e6e6;
+    padding: 80px 0 100px;
+    background-color: mix($blue, $white, 15%);
+    text-align: center;
+
+    h2 {
+        margin-bottom: 40px;
+        font-size: 24px;
+        font-weight: 400;
+    }
+}
+
+.stats-columns {
+    display: flex;
+    justify-content: center;
+}
+
+.stat {
+    width: 120px;
+    margin: 0 15px;
+    line-height: 1;
+    text-align: center;
+}
+
+.stat-number {
+    margin-bottom: 10px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 48px;
+    font-weight: 200;
+}
+
+.stat-sub {
+    font-size: 15px;
 }
 
 .progress {
-    width: 400px;
-    margin: auto;
+    width: 600px;
+    margin: 0 auto 30px;
     font-size: 14px;
     font-weight: 500;
 }
@@ -120,11 +151,10 @@ p {
 .progress-bar {
     position: relative;
     width: 100%;
-    height: 30px;
+    height: 12px;
     margin-bottom: 5px;
-    background-color: #fff;
-    border-radius: 3px;
-    overflow: hidden;
+    background-color: $white;
+    border-radius: 12px;
 }
 
 .progress-bar-fill {
@@ -133,4 +163,32 @@ p {
     left: 0;
     bottom: 0;
     background-color: $blue;
+    border-radius: 12px;
+
+    &:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: -9px;
+        width: 18px;
+        height: 18px;
+        transform: translateY(-50%);
+        background-color: $blue;
+        border-radius: 100%;
+    }
+}
+
+.progress-bar-percentage {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    display: block;
+    width: 60px;
+    margin-left: 15px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1;
+    text-align: left;
 }

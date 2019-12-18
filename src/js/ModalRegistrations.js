@@ -35,7 +35,7 @@ const ModalRegistrations = ({ isOpen, toggleModal }) => {
     ))
 
     return (
-        <Modal isOpen={isOpen} toggle={toggleModal} fade={false} centered={true}>
+        <Modal isOpen={isOpen} toggle={toggleModal} centered={true}>
             <div className="modal-header">
                 <h3>{formattedDate}</h3>
                 <h4>{`${selectedHour}.00 - ${selectedHour + 1}.00 uur`}</h4>

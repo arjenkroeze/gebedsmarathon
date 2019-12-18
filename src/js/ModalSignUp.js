@@ -118,7 +118,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     const selectedHour = selectedDate.getHours()
 
     return (
-        <Modal isOpen={isOpen} toggle={toggleModal} fade={false} centered={true}>
+        <Modal isOpen={isOpen} toggle={toggleModal} centered={true}>
             {signed ? (
                 <ModalBody>
                     <p>Succesvol ingeschreven! Dit venster kan worden gesloten.</p>
