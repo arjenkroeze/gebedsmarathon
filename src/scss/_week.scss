@@ -19,10 +19,10 @@
     cursor: default;
 
     &.is-available {
-        background-color: mix($green, $white, 20%);
+        background-color: mix($dark, $white, 10%);
 
         &:not(.is-history):hover {
-            background-color: mix($green, $white, 30%);
+            background-color: mix($dark, $white, 20%);
         }
     }
 
@@ -32,10 +32,10 @@
     }
 
     &.is-registered {
-        background-color: mix($yellow, $white, 25%);
+        background-color: mix($green, $white, 20%);
 
         &:hover {
-            background-color: mix($yellow, $white, 35%);
+            background-color: mix($green, $white, 30%);
         }
     }
 

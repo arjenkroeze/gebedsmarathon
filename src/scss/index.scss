@@ -65,94 +65,38 @@ p {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    background-image: url(../img/background-2.jpg);
-    background-size: cover;
-    background-position: center;
-    color: #fff;
+    padding: 30px 0;
+    background-color: $blue;
+    color: $white;
     text-align: center;
 
-    &:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background-color: rgba(0, 0, 0, 0.4);
-    }
-
-    > * {
-        position: relative;
-        z-index: 1;
-    }
-
     h1 {
-        margin-bottom: 10px;
-        font-family: 'Oswald', sans-serif;
-        font-size: 72px;
-        font-weight: 200;
+        margin-bottom: 0;
+        font-size: 32px;
+        font-weight: 600;
         line-height: 1;
     }
 
     h2 {
-        font-size: 32px;
-        font-weight: 300;
-    }
-
-    .button {
-        margin-top: 30px;
-    }
-}
-
-.stats {
-    margin-bottom: 100px;
-    padding: 80px 0 100px;
-    background-color: mix($blue, $white, 15%);
-    text-align: center;
-
-    h2 {
-        margin-bottom: 40px;
+        margin-bottom: 0;
         font-size: 24px;
         font-weight: 400;
     }
 }
 
-.stats-columns {
-    display: flex;
-    justify-content: center;
-}
-
-.stat {
-    width: 120px;
-    margin: 0 15px;
-    line-height: 1;
-    text-align: center;
-}
-
-.stat-number {
-    margin-bottom: 10px;
-    font-family: 'Oswald', sans-serif;
-    font-size: 48px;
-    font-weight: 200;
-}
-
-.stat-sub {
-    font-size: 15px;
-}
-
 .progress {
-    width: 600px;
-    margin: 0 auto 30px;
-    font-size: 14px;
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 70px;
+    padding: 5px 0;
+    background-color: mix($blue, $white, 10%);
 }
 
 .progress-bar {
     position: relative;
-    width: 100%;
+    width: 500px;
     height: 12px;
-    margin-bottom: 5px;
     background-color: $white;
     border-radius: 12px;
 }
@@ -186,9 +130,15 @@ p {
     display: block;
     width: 60px;
     margin-left: 15px;
-    font-family: 'Oswald', sans-serif;
     font-size: 18px;
-    font-weight: 300;
     line-height: 1;
     text-align: left;
+}
+
+.progress-status {
+    margin-left: 20px;
+    padding: 20px 0;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
 }

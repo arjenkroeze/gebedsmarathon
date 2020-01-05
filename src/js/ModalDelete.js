@@ -46,6 +46,7 @@ const ModalDelete = ({ isOpen, toggleModal }) => {
 
         if (email !== selectedRegistration.email) {
             setError('E-mailadres komt niet overeen.')
+            emailInput.current.focus()
             return
         }
 

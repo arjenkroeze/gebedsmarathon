@@ -108,7 +108,7 @@ function Week(props) {
 
     return (
         <WeekContext.Provider value={{ setHover }}>
-            <h2 className="text-center">{`${formattedStartDate} - ${formattedEndDate}`}</h2>
+            {/* <h2 className="text-center">{`${formattedStartDate} - ${formattedEndDate}`}</h2> */}
             <table className="week">
                 <thead className="week-header">
                     <tr>{dayTitles}</tr>

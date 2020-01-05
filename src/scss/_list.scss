@@ -13,6 +13,7 @@
         display: flex;
         align-items: center;
         padding: 12px 20px;
+        line-height: 26px;
     }
 
     .list-item:not(:last-child) {
@@ -33,6 +34,10 @@
         line-height: 1;
         cursor: pointer;
         color: $red;
+
+        &:hover {
+            background-color: mix($red, $white, 10%);
+        }
     }
 
     svg {
