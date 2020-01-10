@@ -31,16 +31,6 @@ function Week(props) {
         )
     }
 
-    const formattedStartDate = new Intl.DateTimeFormat('nl-NL', {
-        day: 'numeric',
-        month: 'long',
-    }).format(props.startDate)
-
-    const formattedEndDate = new Intl.DateTimeFormat('nl-NL', {
-        day: 'numeric',
-        month: 'long',
-    }).format(props.endDate)
-
     // Array to store the hours
     let hours = []
 
@@ -108,13 +98,14 @@ function Week(props) {
 
     return (
         <WeekContext.Provider value={{ setHover }}>
-            {/* <h2 className="text-center">{`${formattedStartDate} - ${formattedEndDate}`}</h2> */}
-            <table className="week">
-                <thead className="week-header">
-                    <tr>{dayTitles}</tr>
-                </thead>
-                <tbody className="week-body">{hours}</tbody>
-            </table>
+            <div className="week-wrapper">
+                <table className="week">
+                    <thead className="week-header">
+                        <tr>{dayTitles}</tr>
+                    </thead>
+                    <tbody className="week-body">{hours}</tbody>
+                </table>
+            </div>
         </WeekContext.Provider>
     )
 }

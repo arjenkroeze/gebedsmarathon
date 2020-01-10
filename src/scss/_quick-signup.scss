@@ -1,0 +1,29 @@
+.quick-signup {
+    display: grid;
+    row-gap: 10px;
+    margin-bottom: 50px;
+    padding: 0 20px;
+
+    h3 {
+        margin-bottom: 0;
+    }
+
+    .button {
+        justify-content: center;
+        height: 54px;
+    }
+
+    @media (min-width: 768px) {
+        display: none;
+    }
+}
+
+.quick-signup-success {
+    padding: 20px;
+    background-color: mix($green, $white, 10%);
+
+    .button {
+        background-color: $green;
+        color: $white;
+    }
+}

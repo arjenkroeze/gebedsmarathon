@@ -1,0 +1,61 @@
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 60vh;
+    padding-bottom: 40px;
+    background-image: url('../img/background-4.jpg');
+    background-size: cover;
+    background-position: center;
+    background-color: $blue;
+    color: $white;
+    text-align: center;
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(mix($dark, $blue, 25%), 0.6);
+    }
+
+    p,
+    h1,
+    h2 {
+        position: relative;
+        z-index: 1;
+    }
+
+    p {
+        width: 100%;
+        margin-bottom: 40px;
+        padding: 12px 0;
+        background-color: rgba($blue, 0.4);
+        color: rgba($white, 0.8);
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    h1 {
+        margin-top: auto;
+        margin-bottom: 5px;
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    h2 {
+        margin-bottom: auto;
+        font-size: 24px;
+        font-weight: 300;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        min-height: 40vh;
+    }
+}

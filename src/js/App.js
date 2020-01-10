@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import AppContext from './context/AppContext'
 import Header from './Header'
+import Location from './Location'
 import ModalDelete from './ModalDelete'
 import ModalRegistrations from './ModalRegistrations'
 import ModalSignUp from './ModalSignUp'
+import QuickSignUp from './QuickSignUp'
 import Stats from './Stats'
 import { database } from './utilities/firebase'
 import Week from './Week'
@@ -102,7 +104,9 @@ function App() {
         >
             <Header />
             <Stats />
+            <QuickSignUp />
             {weeks}
+            <Location />
             <ModalSignUp isOpen={modal === 'signup'} toggleModal={toggleModal} />
             <ModalRegistrations isOpen={modal === 'registrations'} toggleModal={toggleModal} />
             <ModalDelete isOpen={modal === 'delete'} toggleModal={toggleModal} />

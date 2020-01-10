@@ -2,7 +2,7 @@
 @import '../../node_modules/bootstrap/scss/variables';
 
 $lightgray: rgb(233, 236, 239);
-$blue: rgb(22, 88, 231);
+$blue: rgb(21, 77, 196);
 $red: rgb(207, 40, 28);
 $green: rgb(40, 167, 69);
 $yellow: rgb(255, 178, 7);
@@ -18,6 +18,10 @@ $modal-transition: transform 0.2s ease-out;
 @import 'list';
 @import 'modal';
 @import 'forms';
+@import 'header';
+@import 'location';
+@import 'progress';
+@import 'quick-signup';
 @import 'week';
 @import 'utilities';
 
@@ -57,88 +61,4 @@ h2 {
 p {
     margin-top: 0;
     margin-bottom: 20px;
-}
-
-.main-header {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 30px 0;
-    background-color: $blue;
-    color: $white;
-    text-align: center;
-
-    h1 {
-        margin-bottom: 0;
-        font-size: 32px;
-        font-weight: 600;
-        line-height: 1;
-    }
-
-    h2 {
-        margin-bottom: 0;
-        font-size: 24px;
-        font-weight: 400;
-    }
-}
-
-.progress {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 70px;
-    padding: 5px 0;
-    background-color: mix($blue, $white, 10%);
-}
-
-.progress-bar {
-    position: relative;
-    width: 500px;
-    height: 12px;
-    background-color: $white;
-    border-radius: 12px;
-}
-
-.progress-bar-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    background-color: $blue;
-    border-radius: 12px;
-
-    &:after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        right: -9px;
-        width: 18px;
-        height: 18px;
-        transform: translateY(-50%);
-        background-color: $blue;
-        border-radius: 100%;
-    }
-}
-
-.progress-bar-percentage {
-    position: absolute;
-    top: 50%;
-    left: 100%;
-    transform: translateY(-50%);
-    display: block;
-    width: 60px;
-    margin-left: 15px;
-    font-size: 18px;
-    line-height: 1;
-    text-align: left;
-}
-
-.progress-status {
-    margin-left: 20px;
-    padding: 20px 0;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
 }

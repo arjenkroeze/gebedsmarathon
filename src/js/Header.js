@@ -16,12 +16,12 @@ const Header = () => {
     }).format(endDate)
 
     return (
-        <header className="main-header">
+        <header className="header">
+            <p>Vrije Baptistengemeente Emmen</p>
             <h1>Gebedsmarathon</h1>
             <h2>
                 {formattedStartDate} - {formattedEndDate}
             </h2>
-            {/* <button className="button button-primary">Direct inschrijven</button> */}
         </header>
     )
 }
