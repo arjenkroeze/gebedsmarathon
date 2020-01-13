@@ -26,19 +26,26 @@ const QuickSignUp = () => {
         setReferralDate(startDate.getTime() > Date.now() ? startDate : new Date())
     }, [startDate])
 
-    // Set the date options
+    // This effect will populate the options for selecting a day
     useEffect(() => {
+        // The temporary array where we will store the dates
         const dates = []
 
-        const numberOfRealDays = Math.ceil(
+        // Calculate the number of days we need to render
+        const numberOfDays = Math.ceil(
             (endDate.getTime() - referralDate.getTime()) / 1000 / 60 / 60 / 24
         )
 
-        for (let j = 0; j < numberOfRealDays; j++) {
+        // For every day...
+        for (let j = 0; j < numberOfDays; j++) {
+            // Create a date object...
             const dayDate = new Date(referralDate)
             dayDate.setDate(dayDate.getDate() + j)
+
+            // Reset the hours...
             dayDate.setHours(0)
 
+            // Create a readable date format...
             const dayName = new Intl.DateTimeFormat('nl-NL', {
                 weekday: 'long',
                 day: 'numeric',
@@ -46,9 +53,11 @@ const QuickSignUp = () => {
                 year: 'numeric',
             }).format(dayDate)
 
+            // ... and add it to the array!
             dates.push({ label: dayName, date: dayDate.getTime() })
         }
 
+        // When all dates are set, update the state
         setDateOptions(dates)
     }, [referralDate, endDate])
 
