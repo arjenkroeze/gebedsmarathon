@@ -186,6 +186,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                                     type="button"
                                     className="button button-primary button-link button-small button-add"
                                     onClick={addName}
+                                    tabIndex={-1}
                                 >
                                     Ik neem nog iemand mee
                                 </button>

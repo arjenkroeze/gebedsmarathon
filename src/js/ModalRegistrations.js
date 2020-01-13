@@ -72,7 +72,7 @@ const RegistrationListItem = ({ id, name, email }) => {
     return (
         <li className="list-item">
             <div className="list-item-name">{name}</div>
-            <button className="list-item-action" onClick={handleDelete}>
+            <button className="list-item-action" onClick={handleDelete} tabIndex={-1}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
                     <path
                         fill="currentColor"
