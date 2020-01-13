@@ -11,8 +11,8 @@ import { database } from './utilities/firebase'
 import Week from './Week'
 
 function App() {
-    const startDate = new Date('2020-3-1 11:00')
-    const endDate = new Date('2020-3-22 10:00')
+    const startDate = new Date(2020, 2, 1, 11)
+    const endDate = new Date(2020, 2, 22, 10)
 
     // State
     const [registrations, setRegistrations] = useState([])
