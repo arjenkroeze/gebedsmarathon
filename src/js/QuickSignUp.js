@@ -196,7 +196,7 @@ const QuickSignUp = () => {
                 Je e-mailadres wordt gebruikt om inschrijvingen te kunnen annuleren.
             </p>
             <button className="button button-primary" onClick={handleSubmit}>
-                Opgeven
+                Inschrijven
             </button>
         </div>
     )
