@@ -28,7 +28,8 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
         const defaultNames = [{ id: 0, firstName: '', lastName: '' }]
 
         if (auth.user) {
-            const [firstName, lastName] = auth.user.displayName.split('|')
+            const [firstName, lastName] =
+                auth.user && auth.user.displayName ? auth.user.displayName.split('|') : ['', '']
             defaultNames[0].firstName = firstName
             defaultNames[0].lastName = lastName
         }
@@ -42,9 +43,11 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
             setSuccess(false)
 
             // Focus on the input with a short delay to spare the animation
-            setTimeout(() => {
-                nameInput.current.focus()
-            }, 25)
+            if (nameInput.current) {
+                setTimeout(() => {
+                    nameInput.current.focus()
+                }, 25)
+            }
         }
     }, [isOpen, auth.user])
 
@@ -114,6 +117,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                     from: 'Gebedsmarathon <noreply@gebedsmarathon.nl>',
                     to: [email],
                     message: {
+                        messageId: 'account-creation',
                         subject: 'Account aangemaakt',
                         text: `Er is een account voor je aangemaakt op www.gebedsmarathon.nl:\r\n\r\nGebruikersnaam: ${email}\r\nWachtwoord: ${password}\r\n\r\nMet dit account kun je je inschrijvingen beheren.`,
                         html: `<p>Er is een account voor je aangemaakt op <a href="https://www.gebedsmarathon.nl">www.gebedsmarathon.nl</a>:</p><p>Gebruikersnaam: ${email}<br />Wachtwoord: ${password}</p><p>Met dit account kun je je inschrijvingen beheren.<p>`,
@@ -177,11 +181,17 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     // Get the hour of the selected date
     const selectedHour = selectedDate.getHours()
 
-    return (
-        <Modal isOpen={isOpen} toggle={toggleModal} centered={true}>
-            {success ? (
+    if (success || isLoading) {
+        return (
+            <Modal isOpen={isOpen} toggle={toggleModal} centered={true}>
                 <ModalBody>
-                    <p className="text-center mb-0">Succesvol ingeschreven!</p>
+                    <p className="text-center mb-0">
+                        {isLoading ? (
+                            <span className="spinner-border spinner-border-sm"></span>
+                        ) : (
+                            'Succesvol ingeschreven!'
+                        )}
+                    </p>
                     <p className="text-center mb-0">
                         <button
                             type="button"
@@ -192,123 +202,127 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                         </button>
                     </p>
                 </ModalBody>
-            ) : (
-                <>
-                    <div className="modal-header">
-                        <h3>{formattedDate}</h3>
-                        <h4>{`${selectedHour}.00 - ${selectedHour + 1}.00 uur`}</h4>
-                    </div>
-                    <ModalBody>
-                        <form onSubmit={handleSubmit}>
-                            {names.map((name, index) => {
-                                const firstNameId = `firstName-${name.id}`
-                                const lastNameId = `lastName-${name.id}`
+            </Modal>
+        )
+    }
 
-                                return (
-                                    <div className="form-grid" key={index}>
-                                        <div className="form-group">
-                                            <label htmlFor={firstNameId}>Voornaam *</label>
-                                            <input
-                                                type="text"
-                                                id={firstNameId}
-                                                name="firstName"
-                                                className="input"
-                                                value={name.firstName}
-                                                onChange={handleNameChange}
-                                                ref={name.id === 0 ? nameInput : null}
-                                                required={true}
-                                                readOnly={isLoading}
-                                            />
-                                            {error === 'ERROR_INVALID_NAME' && (
-                                                <p className="form-group-help text-danger">
-                                                    Vul een voor- en achternaam in.
-                                                </p>
-                                            )}
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor={lastNameId}>
-                                                Achternaam *
-                                                {name.id !== 0 && (
-                                                    <button
-                                                        type="button"
-                                                        className="button button-small button-link button-danger"
-                                                        onClick={() => removeName(name.id)}
-                                                        tabIndex={-1}
-                                                    >
-                                                        Verwijderen
-                                                    </button>
-                                                )}
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id={lastNameId}
-                                                name="lastName"
-                                                className="input"
-                                                value={name.lastName}
-                                                onChange={handleNameChange}
-                                                required={true}
-                                                readOnly={isLoading}
-                                            />
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                            {names.length < 5 && (
-                                <button
-                                    type="button"
-                                    className="button button-primary button-link button-small button-add"
-                                    onClick={!isLoading ? addName : null}
-                                    tabIndex={-1}
-                                >
-                                    Ik neem nog iemand mee
-                                </button>
-                            )}
-                            <div className="form-group">
-                                <label htmlFor="email">E-mailadres *</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    className="input"
-                                    value={email}
-                                    onChange={handleEmailChange}
-                                    ref={emailInput}
-                                    required={true}
-                                    readOnly={isLoading || auth.user}
-                                />
-                                {error === 'ERROR_INVALID_EMAIL' && (
-                                    <p className="form-group-help text-danger">
-                                        Vul een geldig e-mailadres in.
-                                    </p>
-                                )}
+    return (
+        <Modal isOpen={isOpen} toggle={toggleModal} centered={true}>
+            <div className="modal-header">
+                <h3>{formattedDate}</h3>
+                <h4>{`${selectedHour}.00 - ${selectedHour + 1}.00 uur`}</h4>
+            </div>
+            <ModalBody>
+                <form onSubmit={handleSubmit}>
+                    {names.map((name, index) => {
+                        const firstNameId = `firstName-${name.id}`
+                        const lastNameId = `lastName-${name.id}`
 
-                                {error === 'EMAIL_IN_USE' && (
-                                    <p className="form-group-help text-danger">
-                                        Dit e-mailadres is al in gebruik. Wil je{' '}
-                                        <button onClick={() => setModal('signin')}>inloggen</button>
-                                        ?
-                                    </p>
-                                )}
-                            </div>
-                            <div className="d-flex justify-content-between">
-                                <button type="button" className="button" onClick={toggleModal}>
-                                    Annuleren
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="button button-primary"
-                                    onClick={handleSubmit}
-                                >
-                                    Inschrijven{' '}
-                                    {isLoading && (
-                                        <span className="spinner-border spinner-border-sm"></span>
+                        return (
+                            <div className="form-grid" key={index}>
+                                <div className="form-group">
+                                    <label htmlFor={firstNameId}>Voornaam *</label>
+                                    <input
+                                        type="text"
+                                        id={firstNameId}
+                                        name="firstName"
+                                        className="input"
+                                        value={name.firstName}
+                                        onChange={handleNameChange}
+                                        ref={name.id === 0 ? nameInput : null}
+                                        required={true}
+                                        readOnly={isLoading}
+                                    />
+                                    {error === 'ERROR_INVALID_NAME' && (
+                                        <p className="form-group-help text-danger">
+                                            Vul een voor- en achternaam in.
+                                        </p>
                                     )}
-                                </button>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor={lastNameId}>
+                                        Achternaam *
+                                        {name.id !== 0 && (
+                                            <button
+                                                type="button"
+                                                className="button button-small button-link button-danger"
+                                                onClick={() => removeName(name.id)}
+                                                tabIndex={-1}
+                                            >
+                                                Verwijderen
+                                            </button>
+                                        )}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id={lastNameId}
+                                        name="lastName"
+                                        className="input"
+                                        value={name.lastName}
+                                        onChange={handleNameChange}
+                                        required={true}
+                                        readOnly={isLoading}
+                                    />
+                                </div>
                             </div>
-                        </form>
-                    </ModalBody>
-                </>
-            )}
+                        )
+                    })}
+                    {names.length < 5 && (
+                        <button
+                            type="button"
+                            className="button button-primary button-link button-small button-add"
+                            onClick={!isLoading ? addName : null}
+                            tabIndex={-1}
+                        >
+                            Ik neem nog iemand mee
+                        </button>
+                    )}
+                    <div className="form-group">
+                        <label htmlFor="email">E-mailadres *</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            className="input"
+                            value={email}
+                            onChange={handleEmailChange}
+                            ref={emailInput}
+                            required={true}
+                            readOnly={isLoading || auth.user}
+                        />
+                        {error === 'ERROR_INVALID_EMAIL' && (
+                            <p className="form-group-help text-danger">
+                                Vul een geldig e-mailadres in.
+                            </p>
+                        )}
+
+                        {error === 'EMAIL_IN_USE' && (
+                            <p className="form-group-help text-danger">
+                                Dit e-mailadres is al in gebruik. Wil je{' '}
+                                <button tabIndex={-1} onClick={() => setModal('signin')}>
+                                    inloggen
+                                </button>
+                                ?
+                            </p>
+                        )}
+                    </div>
+                    <div className="d-flex justify-content-between">
+                        <button type="button" className="button" onClick={toggleModal}>
+                            Annuleren
+                        </button>
+                        <button
+                            type="submit"
+                            className="button button-primary"
+                            onClick={handleSubmit}
+                        >
+                            Inschrijven{' '}
+                            {isLoading && (
+                                <span className="spinner-border spinner-border-sm"></span>
+                            )}
+                        </button>
+                    </div>
+                </form>
+            </ModalBody>
         </Modal>
     )
 }

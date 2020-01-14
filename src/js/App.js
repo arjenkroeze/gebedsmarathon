@@ -124,13 +124,14 @@ function App() {
             from: 'Gebedsmarathon <noreply@gebedsmarathon.nl>',
             to: [registration.email],
             message: {
+                messageId: 'registration-reminder',
                 subject: 'Een herinnering voor morgen',
                 text: `Beste ${
                     registration.name
                 },\r\nDit is een geautomatiseerd bericht ter herinnering dat je morgen om <strong>${registrationDate.getHours()}.00 uur</strong> staat ingeschreven voor de gebedsmarathon.\r\nWees gezegend!`,
-                html: `Beste ${
+                html: `<p>Beste ${
                     registration.name
-                },<br /><br />Dit is een geautomatiseerd bericht ter herinnering dat je morgen om <strong>${registrationDate.getHours()}.00 uur</strong> staat ingeschreven voor de gebedsmarathon.<br /><br />Wees gezegend!`,
+                },</p><p>Dit is een geautomatiseerd bericht ter herinnering dat je morgen om <strong>${registrationDate.getHours()}.00 uur</strong> staat ingeschreven voor de gebedsmarathon.</p><p>Wees gezegend!</p>`,
             },
         })
 

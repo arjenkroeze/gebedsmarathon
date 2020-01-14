@@ -5,11 +5,7 @@ service cloud.firestore {
     }
 
     match /mail/{mail} {
-      allow read, write: if true;
-    }
-
-    match /users/{user} {
-      allow read, write: if true;
+      allow create: if request.auth.uid != null;
     }
   }
 }

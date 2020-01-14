@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
 import AppContext from './context/AppContext'
+import { useAuth } from './utilities/hooks'
 
 const ModalRegistrations = ({ isOpen, toggleModal }) => {
     // Context
@@ -62,8 +63,11 @@ const ModalRegistrations = ({ isOpen, toggleModal }) => {
 }
 
 const RegistrationListItem = ({ id, name, uid }) => {
+    // Authentication
+    const auth = useAuth()
+
     // Context
-    const { setModal, setSelectedRegistrationId, userInfo } = useContext(AppContext)
+    const { setModal, setSelectedRegistrationId } = useContext(AppContext)
 
     const handleDelete = () => {
         setSelectedRegistrationId(id)
@@ -73,7 +77,7 @@ const RegistrationListItem = ({ id, name, uid }) => {
     return (
         <li className="list-item">
             <div className="list-item-name">{name}</div>
-            {userInfo && userInfo.uid === uid && (
+            {auth && auth.user.uid === uid && (
                 <button className="list-item-action" onClick={handleDelete} tabIndex={-1}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
                         <path

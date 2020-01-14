@@ -34,9 +34,11 @@ const QuickSignUp = () => {
 
         // Populate values with user data
         if (auth.user) {
-            const [firstName, lastName] = auth.user.displayName.split('|')
+            const [firstName, lastName] =
+                auth.user && auth.user.displayName ? auth.user.displayName.split('|') : ['', '']
             defaultValues.firstName = firstName
             defaultValues.lastName = lastName
+            defaultValues.email = auth.user.email
         }
 
         setValues(defaultValues)
@@ -138,7 +140,7 @@ const QuickSignUp = () => {
         const { firstName, lastName, email, selectedDate, selectedHour } = values
 
         // Validate names
-        if (Object.values(values).some(value => value !== '')) {
+        if (!Object.values(values).some(value => value !== '')) {
             setError('ERROR_INVALID_NAME')
             return
         }
@@ -179,6 +181,7 @@ const QuickSignUp = () => {
                     from: 'Gebedsmarathon <noreply@gebedsmarathon.nl>',
                     to: [email],
                     message: {
+                        messageId: 'account-creation',
                         subject: 'Account aangemaakt',
                         text: `Er is een account voor je aangemaakt op www.gebedsmarathon.nl:\r\n\r\nGebruikersnaam: ${email}\r\nWachtwoord: ${password}\r\n\r\nMet dit account kun je je inschrijvingen beheren.`,
                         html: `<p>Er is een account voor je aangemaakt op <a href="https://www.gebedsmarathon.nl">www.gebedsmarathon.nl</a>:</p><p>Gebruikersnaam: ${email}<br />Wachtwoord: ${password}</p><p>Met dit account kun je je inschrijvingen beheren.<p>`,
@@ -186,7 +189,7 @@ const QuickSignUp = () => {
                 })
 
                 // Little cheat to save the first and last name of the user
-                await auth.updateProfile(`${firstName},${lastName}`)
+                await auth.updateProfile(`${firstName}|${lastName}`)
             } catch (error) {
                 // Catch existing users
                 if (error.code === 'auth/email-already-in-use') {
@@ -229,7 +232,7 @@ const QuickSignUp = () => {
     }
 
     return (
-        <div className="quick-signup">
+        <form className="quick-signup" onSubmit={handleSubmit}>
             <h3>Schrijf je in</h3>
             <p>
                 Gebruik onderstaand formulier om je in te schrijven. Nog verder naar beneden staat
@@ -298,7 +301,7 @@ const QuickSignUp = () => {
                 Inschrijven
                 {isLoading && <span className="spinner-border spinner-border-sm"></span>}
             </button>
-        </div>
+        </form>
     )
 }
 

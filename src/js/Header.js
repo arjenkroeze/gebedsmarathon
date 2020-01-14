@@ -4,7 +4,7 @@ import { useAuth } from './utilities/hooks'
 
 const Header = () => {
     // Auth
-    const { user, signout } = useAuth()
+    const auth = useAuth()
 
     // Context
     const { startDate, endDate, setModal } = useContext(AppContext)
@@ -20,18 +20,18 @@ const Header = () => {
         year: 'numeric',
     }).format(endDate)
 
-    const [firstName] = user ? user.displayName.split('|') : ['']
+    const [firstName] = auth.user && auth.user.displayName ? auth.user.displayName.split('|') : ['']
 
     return (
         <header className="header">
             <div className="header-bar">
                 <p>Vrije Baptistengemeente Emmen</p>
-                {!user ? (
+                {!auth.user ? (
                     <button onClick={() => setModal('signin')}>Inloggen</button>
                 ) : (
                     <p>
-                        {user ? <span>Welkom, {firstName}</span> : ''}
-                        <button onClick={async () => await signout()}>(uitloggen)</button>
+                        {auth.user ? <span>Welkom, {firstName}</span> : ''}
+                        <button onClick={async () => await auth.signout()}>(uitloggen)</button>
                     </p>
                 )}
             </div>
