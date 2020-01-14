@@ -1,8 +1,13 @@
 import React, { useContext } from 'react'
 import AppContext from './context/AppContext'
+import { useAuth } from './utilities/hooks'
 
 const Header = () => {
-    const { startDate, endDate } = useContext(AppContext)
+    // Auth
+    const { user, signout } = useAuth()
+
+    // Context
+    const { startDate, endDate, setModal } = useContext(AppContext)
 
     const formattedStartDate = new Intl.DateTimeFormat('nl-NL', {
         day: 'numeric',
@@ -15,9 +20,21 @@ const Header = () => {
         year: 'numeric',
     }).format(endDate)
 
+    const [firstName] = user ? user.displayName.split('|') : ['']
+
     return (
         <header className="header">
-            <p>Vrije Baptistengemeente Emmen</p>
+            <div className="header-bar">
+                <p>Vrije Baptistengemeente Emmen</p>
+                {!user ? (
+                    <button onClick={() => setModal('signin')}>Inloggen</button>
+                ) : (
+                    <p>
+                        {user ? <span>Welkom, {firstName}</span> : ''}
+                        <button onClick={async () => await signout()}>(uitloggen)</button>
+                    </p>
+                )}
+            </div>
             <h1>Gebedsmarathon</h1>
             <h2>
                 {formattedStartDate} - {formattedEndDate}

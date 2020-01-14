@@ -8,11 +8,14 @@ $green: rgb(40, 167, 69);
 $yellow: rgb(255, 178, 7);
 
 $modal-fade-transform: none;
-$modal-transition: transform 0.2s ease-out;
+$modal-transition: transform 0.2s;
+
+$spinner-border-width-sm: 2px;
 
 @import '../../node_modules/bootstrap/scss/mixins';
 @import '../../node_modules/bootstrap/scss/transitions';
 @import '../../node_modules/bootstrap/scss/modal';
+@import '../../node_modules/bootstrap/scss/spinners';
 
 @import 'button';
 @import 'list';

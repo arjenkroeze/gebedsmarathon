@@ -14,6 +14,9 @@ firebase.initializeApp({
     measurementId: 'G-Y1V8FQ2WF0',
 })
 
+const auth = firebase.auth()
+firebase.auth().languageCode = 'nl'
+
 const database = firebase.firestore()
 
-export { database }
+export { auth, database }

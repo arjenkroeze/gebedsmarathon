@@ -4,7 +4,11 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
-    match /mails/{mail} {
+    match /mail/{mail} {
+      allow read, write: if true;
+    }
+
+    match /users/{user} {
       allow read, write: if true;
     }
   }

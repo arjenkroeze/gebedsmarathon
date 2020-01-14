@@ -24,8 +24,8 @@ form {
     line-height: 20px;
 
     &:read-only {
-        background-color: #f0f0f0;
-        color: #777;
+        background-color: #f3f3f3;
+        color: #666;
     }
 
     &:focus {
@@ -74,9 +74,25 @@ select {
 }
 
 .form-group-help {
-    margin-top: 5px;
+    margin-top: 8px;
     margin-bottom: 10px;
     font-size: 14px;
     line-height: 18px;
     color: #777;
+
+    button {
+        appearance: none;
+        padding: 0;
+        background-color: transparent;
+        border: 0;
+        color: $blue;
+        font-size: inherit;
+        line-height: inherit;
+        text-decoration: underline;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
 }

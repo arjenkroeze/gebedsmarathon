@@ -61,25 +61,28 @@ const ModalRegistrations = ({ isOpen, toggleModal }) => {
     )
 }
 
-const RegistrationListItem = ({ id, name, email }) => {
-    const { setModal, setSelectedRegistration } = useContext(AppContext)
+const RegistrationListItem = ({ id, name, uid }) => {
+    // Context
+    const { setModal, setSelectedRegistrationId, userInfo } = useContext(AppContext)
 
     const handleDelete = () => {
-        setSelectedRegistration({ id, name, email })
+        setSelectedRegistrationId(id)
         setModal('delete')
     }
 
     return (
         <li className="list-item">
             <div className="list-item-name">{name}</div>
-            <button className="list-item-action" onClick={handleDelete} tabIndex={-1}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-                    <path
-                        fill="currentColor"
-                        d="M28.2 24L47.1 5.1c1.2-1.2 1.2-3.1 0-4.2 -1.2-1.2-3.1-1.2-4.2 0L24 19.7 5.1 0.9c-1.2-1.2-3.1-1.2-4.2 0 -1.2 1.2-1.2 3.1 0 4.2l18.9 18.9L0.9 42.9c-1.2 1.2-1.2 3.1 0 4.2C1.5 47.7 2.2 48 3 48s1.5-0.3 2.1-0.9l18.9-18.9L42.9 47.1c0.6 0.6 1.4 0.9 2.1 0.9s1.5-0.3 2.1-0.9c1.2-1.2 1.2-3.1 0-4.2L28.2 24z"
-                    />
-                </svg>
-            </button>
+            {userInfo && userInfo.uid === uid && (
+                <button className="list-item-action" onClick={handleDelete} tabIndex={-1}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                        <path
+                            fill="currentColor"
+                            d="M28.2 24L47.1 5.1c1.2-1.2 1.2-3.1 0-4.2 -1.2-1.2-3.1-1.2-4.2 0L24 19.7 5.1 0.9c-1.2-1.2-3.1-1.2-4.2 0 -1.2 1.2-1.2 3.1 0 4.2l18.9 18.9L0.9 42.9c-1.2 1.2-1.2 3.1 0 4.2C1.5 47.7 2.2 48 3 48s1.5-0.3 2.1-0.9l18.9-18.9L42.9 47.1c0.6 0.6 1.4 0.9 2.1 0.9s1.5-0.3 2.1-0.9c1.2-1.2 1.2-3.1 0-4.2L28.2 24z"
+                        />
+                    </svg>
+                </button>
+            )}
         </li>
     )
 }

@@ -2,44 +2,61 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
 import AppContext from './context/AppContext'
 import { database } from './utilities/firebase'
+import { randomString } from './utilities/functions'
+import { useAuth } from './utilities/hooks'
 
 const ModalSignUp = ({ isOpen, toggleModal }) => {
+    // Authentication
+    const auth = useAuth()
+
     // Context
-    const { selectedDate } = useContext(AppContext)
+    const { selectedDate, setModal } = useContext(AppContext)
 
     // State
     const [names, setNames] = useState([{ id: 0, firstName: '', lastName: '' }])
     const [email, setEmail] = useState('')
-    const [signed, setSigned] = useState(false)
+    const [error, setError] = useState('')
+    const [isLoading, setLoading] = useState(false)
+    const [success, setSuccess] = useState(false)
 
     // Reference
     const nameInput = useRef(null)
+    const emailInput = useRef(null)
 
     // EFfect to reset the values to the initial values
     useEffect(() => {
-        setNames([{ id: 0, firstName: '', lastName: '' }])
-        setEmail('')
+        const defaultNames = [{ id: 0, firstName: '', lastName: '' }]
+
+        if (auth.user) {
+            const [firstName, lastName] = auth.user.displayName.split('|')
+            defaultNames[0].firstName = firstName
+            defaultNames[0].lastName = lastName
+        }
+
+        setNames(defaultNames)
+        setEmail(auth.user ? auth.user.email : '')
+        setError('')
 
         if (isOpen) {
             // Reset the flag
-            setSigned(false)
+            setSuccess(false)
 
             // Focus on the input with a short delay to spare the animation
             setTimeout(() => {
                 nameInput.current.focus()
             }, 25)
         }
-    }, [isOpen])
+    }, [isOpen, auth.user])
 
     // Handle name changes
-    const handleNameChange = event => {
+    const handleNameChange = ({ target }) => {
         // Get the ID
-        const id = Number(event.target.id.split('-').pop())
+        const id = Number(target.id.split('-').pop())
 
         // Update the names
         const updatedNames = names.map(name => {
             if (name.id === id) {
-                name[event.target.name] = event.target.value
+                name[target.name] = target.value
             }
 
             return name
@@ -49,53 +66,94 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     }
 
     // Handle email changes
-    const handleEmailChange = event => {
-        setEmail(event.target.value)
+    const handleEmailChange = ({ target: { value } }) => {
+        setEmail(value)
     }
 
     // Handle form submit
     const handleSubmit = async event => {
         event.preventDefault()
 
-        // Validate!
-        let valid = true
-
-        names.forEach(({ firstName, lastName }) => {
+        // Validate names
+        for (const { firstName, lastName } of names) {
             if (firstName === '' || lastName === '') {
-                valid = false
+                setError('ERROR_INVALID_NAME')
+                nameInput.current.focus()
+                return
             }
-        })
-
-        if (email === '' || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
-            valid = false
         }
 
-        if (!valid) {
+        // Validate the email
+        if (email === '' || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
+            setError('ERROR_INVALID_EMAIL')
+            emailInput.current.focus()
             return
         }
 
+        // All set, let's set a flag for loading
+        setLoading(true)
+
         // Collection reference
         const registrationsRef = database.collection('registrations')
+        const mailRef = database.collection('mail')
+
+        // Create a random password
+        const password = randomString()
+
+        // Check if a user is logged in
+        let user = auth.user ? auth.user : null
+
+        // Create a user if the user is not logged in
+        if (!user) {
+            try {
+                // Create a new account
+                user = await auth.signup(email, password)
+
+                // Inform the user by sending the username and password by email
+                await mailRef.add({
+                    from: 'Gebedsmarathon <noreply@gebedsmarathon.nl>',
+                    to: [email],
+                    message: {
+                        subject: 'Account aangemaakt',
+                        text: `Er is een account voor je aangemaakt op www.gebedsmarathon.nl:\r\n\r\nGebruikersnaam: ${email}\r\nWachtwoord: ${password}\r\n\r\nMet dit account kun je je inschrijvingen beheren.`,
+                        html: `<p>Er is een account voor je aangemaakt op <a href="https://www.gebedsmarathon.nl">www.gebedsmarathon.nl</a>:</p><p>Gebruikersnaam: ${email}<br />Wachtwoord: ${password}</p><p>Met dit account kun je je inschrijvingen beheren.<p>`,
+                    },
+                })
+
+                // Little cheat to save the first and last name of the user
+                await auth.updateProfile(`${names[0].firstName}|${names[0].lastName}`)
+            } catch (error) {
+                // Catch existing users
+                if (error.code === 'auth/email-already-in-use') {
+                    setError('EMAIL_IN_USE')
+                }
+
+                setLoading(false)
+
+                return
+            }
+        }
 
         // Prepare the Firestore batch
         const batch = database.batch()
 
-        // Add overviews to the batch
-        names.forEach(name => {
+        // Add registrations to the batch
+        names.forEach((name, index) => {
             batch.set(registrationsRef.doc(), {
-                created: new Date(),
+                created: new Date(new Date().getTime() + index),
                 date: selectedDate,
                 name: `${name.firstName} ${name.lastName}`,
-                email,
-                reminderSent: false,
+                uid: user.uid,
+                needsReminder: !index,
             })
         })
 
         // Commit the batch
         await batch.commit()
 
-        // Flag signed
-        setSigned(true)
+        setSuccess(true)
+
+        setLoading(false)
     }
 
     // Add a name
@@ -103,6 +161,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
         setNames(names => [...names, { id: names.length, firstName: '', lastName: '' }])
     }
 
+    // Remove a name
     const removeName = id => {
         const newNames = names.filter(name => name.id !== id)
         setNames(newNames)
@@ -120,14 +179,18 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
 
     return (
         <Modal isOpen={isOpen} toggle={toggleModal} centered={true}>
-            {signed ? (
+            {success ? (
                 <ModalBody>
-                    <p>Succesvol ingeschreven! Dit venster kan worden gesloten.</p>
-                    <div className="d-flex justify-content-end">
-                        <button type="button" className="button" onClick={toggleModal}>
+                    <p className="text-center mb-0">Succesvol ingeschreven!</p>
+                    <p className="text-center mb-0">
+                        <button
+                            type="button"
+                            className="button button-link button-primary pb-0"
+                            onClick={toggleModal}
+                        >
                             Sluiten
                         </button>
-                    </div>
+                    </p>
                 </ModalBody>
             ) : (
                 <>
@@ -142,7 +205,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                                 const lastNameId = `lastName-${name.id}`
 
                                 return (
-                                    <div key={index} className="form-grid">
+                                    <div className="form-grid" key={index}>
                                         <div className="form-group">
                                             <label htmlFor={firstNameId}>Voornaam *</label>
                                             <input
@@ -154,7 +217,13 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                                                 onChange={handleNameChange}
                                                 ref={name.id === 0 ? nameInput : null}
                                                 required={true}
+                                                readOnly={isLoading}
                                             />
+                                            {error === 'ERROR_INVALID_NAME' && (
+                                                <p className="form-group-help text-danger">
+                                                    Vul een voor- en achternaam in.
+                                                </p>
+                                            )}
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor={lastNameId}>
@@ -164,6 +233,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                                                         type="button"
                                                         className="button button-small button-link button-danger"
                                                         onClick={() => removeName(name.id)}
+                                                        tabIndex={-1}
                                                     >
                                                         Verwijderen
                                                     </button>
@@ -177,6 +247,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                                                 value={name.lastName}
                                                 onChange={handleNameChange}
                                                 required={true}
+                                                readOnly={isLoading}
                                             />
                                         </div>
                                     </div>
@@ -186,7 +257,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                                 <button
                                     type="button"
                                     className="button button-primary button-link button-small button-add"
-                                    onClick={addName}
+                                    onClick={!isLoading ? addName : null}
                                     tabIndex={-1}
                                 >
                                     Ik neem nog iemand mee
@@ -201,12 +272,23 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                                     className="input"
                                     value={email}
                                     onChange={handleEmailChange}
+                                    ref={emailInput}
                                     required={true}
+                                    readOnly={isLoading || auth.user}
                                 />
-                                <p className="form-group-help">
-                                    Je e-mailadres wordt gebruikt om inschrijvingen te kunnen
-                                    annuleren.
-                                </p>
+                                {error === 'ERROR_INVALID_EMAIL' && (
+                                    <p className="form-group-help text-danger">
+                                        Vul een geldig e-mailadres in.
+                                    </p>
+                                )}
+
+                                {error === 'EMAIL_IN_USE' && (
+                                    <p className="form-group-help text-danger">
+                                        Dit e-mailadres is al in gebruik. Wil je{' '}
+                                        <button onClick={() => setModal('signin')}>inloggen</button>
+                                        ?
+                                    </p>
+                                )}
                             </div>
                             <div className="d-flex justify-content-between">
                                 <button type="button" className="button" onClick={toggleModal}>
@@ -217,7 +299,10 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                                     className="button button-primary"
                                     onClick={handleSubmit}
                                 >
-                                    Inschrijven
+                                    Inschrijven{' '}
+                                    {isLoading && (
+                                        <span className="spinner-border spinner-border-sm"></span>
+                                    )}
                                 </button>
                             </div>
                         </form>

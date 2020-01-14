@@ -4,6 +4,8 @@ import Header from './Header'
 import Location from './Location'
 import ModalDelete from './ModalDelete'
 import ModalRegistrations from './ModalRegistrations'
+import ModalRequestPassword from './ModalRequestPassword'
+import ModalSignIn from './ModalSignIn'
 import ModalSignUp from './ModalSignUp'
 import QuickSignUp from './QuickSignUp'
 import Stats from './Stats'
@@ -20,7 +22,7 @@ function App() {
     // State
     const [registrations, setRegistrations] = useState([])
     const [selectedDate, setSelectedDate] = useState(new Date())
-    const [selectedRegistration, setSelectedRegistration] = useState(null)
+    const [selectedRegistrationId, setSelectedRegistrationId] = useState(null)
     const [modal, setModal] = useState(null)
 
     // EFfect to fetch all registrations from the database
@@ -42,7 +44,7 @@ function App() {
                         const date = new Date(registration.date.seconds * 1000)
 
                         // Send a reminder if the registration is 24 hours upfront
-                        if (date.getTime() - Date.now() < 86400000 && !registration.reminderSent) {
+                        if (date.getTime() - Date.now() < 86400000 && registration.needsReminder) {
                             await sendReminder(registration)
                         }
                     }
@@ -137,8 +139,8 @@ function App() {
                 setModal,
                 selectedDate,
                 setSelectedDate,
-                selectedRegistration,
-                setSelectedRegistration,
+                selectedRegistrationId,
+                setSelectedRegistrationId,
             }}
         >
             <Header />
@@ -146,6 +148,8 @@ function App() {
             <QuickSignUp />
             {weeks}
             <Location />
+            <ModalSignIn isOpen={modal === 'signin'} toggleModal={toggleModal} />
+            <ModalRequestPassword isOpen={modal === 'request-password'} toggleModal={toggleModal} />
             <ModalSignUp isOpen={modal === 'signup'} toggleModal={toggleModal} />
             <ModalRegistrations isOpen={modal === 'registrations'} toggleModal={toggleModal} />
             <ModalDelete isOpen={modal === 'delete'} toggleModal={toggleModal} />
