@@ -67,6 +67,10 @@ select {
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
     column-gap: 20px;
+
+    @media (max-width: 768px) {
+        column-gap: 10px;
+    }
 }
 
 .form-group {

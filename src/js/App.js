@@ -88,10 +88,12 @@ function App() {
 
     // Set an array to store the weeks
     const weeks = []
+    let weekNumber = 1
 
     // For every day, do the following...
     for (let i = 0; i < numberOfDays; i++) {
         // Create a week for every 7 days
+
         if (i % 7 === 0) {
             // Create the start date of the week which is the startDate plus the difference in days
             const weekStartDate = new Date(startDateCopy)
@@ -101,7 +103,16 @@ function App() {
             const weekEndDate = new Date(weekStartDate)
             weekEndDate.setDate(weekEndDate.getDate() + 6)
 
-            weeks.push(<Week key={i} startDate={weekStartDate} endDate={weekEndDate} />)
+            weeks.push(
+                <Week
+                    key={i}
+                    startDate={weekStartDate}
+                    endDate={weekEndDate}
+                    weekNumber={weekNumber}
+                />
+            )
+
+            weekNumber++
         }
     }
 

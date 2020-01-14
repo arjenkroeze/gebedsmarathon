@@ -13,7 +13,8 @@
     border-bottom: 0;
     align-items: center;
 
-    :first-child {
+    h3 {
+        flex: 1 1 100%;
         margin-bottom: 0;
         font-size: 18px;
 
@@ -22,7 +23,7 @@
         }
     }
 
-    :nth-child(2) {
+    h4 {
         margin-bottom: 0;
         font-weight: 500;
     }

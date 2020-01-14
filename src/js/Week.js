@@ -8,7 +8,7 @@ function Week(props) {
     const [hover, setHover] = useState(-1)
 
     // Array to store the title of the days
-    const dayTitles = [<th key="0"></th>]
+    const dayTitles = [<th key="0">Week {props.weekNumber}</th>]
 
     // For every day of the week...
     for (let x = 0; x < 7; x++) {

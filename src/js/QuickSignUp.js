@@ -259,22 +259,24 @@ const QuickSignUp = () => {
                     </option>
                 ))}
             </select>
-            <input
-                type="text"
-                className="input"
-                placeholder="Voornaam"
-                name="firstName"
-                value={values.firstName}
-                onChange={handleChange}
-            />
-            <input
-                type="text"
-                className="input"
-                placeholder="Achternaam"
-                name="lastName"
-                value={values.lastName}
-                onChange={handleChange}
-            />
+            <div className="form-grid">
+                <input
+                    type="text"
+                    className="input"
+                    placeholder="Voornaam"
+                    name="firstName"
+                    value={values.firstName}
+                    onChange={handleChange}
+                />
+                <input
+                    type="text"
+                    className="input"
+                    placeholder="Achternaam"
+                    name="lastName"
+                    value={values.lastName}
+                    onChange={handleChange}
+                />
+            </div>
             <input
                 type="email"
                 className="input"
