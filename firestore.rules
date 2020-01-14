@@ -3,5 +3,9 @@ service cloud.firestore {
     match /registrations/{registration} {
       allow read, write: if true;
     }
+
+    match /mails/{mail} {
+      allow read, write: if true;
+    }
   }
 }

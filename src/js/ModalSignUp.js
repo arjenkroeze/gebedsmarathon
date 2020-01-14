@@ -83,10 +83,11 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
         // Add overviews to the batch
         names.forEach(name => {
             batch.set(registrationsRef.doc(), {
-                created: Date.now(),
+                created: new Date(),
                 date: selectedDate,
                 name: `${name.firstName} ${name.lastName}`,
                 email,
+                reminderSent: false,
             })
         })
 

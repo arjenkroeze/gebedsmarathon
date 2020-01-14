@@ -119,10 +119,11 @@ const QuickSignUp = () => {
 
         // Collection reference
         await database.collection('registrations').add({
-            created: Date.now(),
+            created: new Date(),
             date: registrationDate,
             name: `${values.firstName} ${values.lastName}`,
             email: values.email,
+            reminderSent: false,
         })
 
         setSuccess(true)

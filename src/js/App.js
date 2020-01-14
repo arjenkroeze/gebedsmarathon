@@ -12,7 +12,7 @@ import Week from './Week'
 
 function App() {
     // 1 march 2020, 11:00
-    const startDate = new Date(2020, 0, 1, 11)
+    const startDate = new Date(2020, 2, 1, 11)
 
     // 22 march 2020, 10:00
     const endDate = new Date(2020, 2, 22, 10)
@@ -30,11 +30,22 @@ function App() {
             database
                 .collection('registrations')
                 .orderBy('created', 'asc')
-                .onSnapshot(querySnapshot => {
+                .onSnapshot(async querySnapshot => {
                     const results = []
-                    querySnapshot.forEach(doc => {
-                        results.push({ id: doc.id, ...doc.data() })
-                    })
+                    for (const document of querySnapshot.docs) {
+                        const registration = document.data()
+                        registration.id = document.id
+
+                        results.push(registration)
+
+                        // Convert the timestamp to a Date-object
+                        const date = new Date(registration.date.seconds * 1000)
+
+                        // Send a reminder if the registration is 24 hours upfront
+                        if (date.getTime() - Date.now() < 86400000 && !registration.reminderSent) {
+                            await sendReminder(registration)
+                        }
+                    }
                     setRegistrations(results)
                 })
         }
@@ -90,6 +101,31 @@ function App() {
 
             weeks.push(<Week key={i} startDate={weekStartDate} endDate={weekEndDate} />)
         }
+    }
+
+    // Send a reminder
+    async function sendReminder(registration) {
+        const registrationDate = new Date(registration.date.seconds * 1000)
+
+        await database.collection('mail').add({
+            from: 'Gebedsmarathon <noreply@gebedsmarathon.nl>',
+            to: [registration.email],
+            message: {
+                subject: 'Een herinnering voor morgen',
+                text: `Beste ${
+                    registration.name
+                },\r\nDit is een geautomatiseerd bericht ter herinnering dat je morgen om <strong>${registrationDate.getHours()}.00 uur</strong> staat ingeschreven voor de gebedsmarathon.\r\nWees gezegend!`,
+                html: `Beste ${
+                    registration.name
+                },<br /><br />Dit is een geautomatiseerd bericht ter herinnering dat je morgen om <strong>${registrationDate.getHours()}.00 uur</strong> staat ingeschreven voor de gebedsmarathon.<br /><br />Wees gezegend!`,
+            },
+        })
+
+        // Very important to update the reminderSent flag
+        await database
+            .collection('registrations')
+            .doc(registration.id)
+            .update({ reminderSent: true })
     }
 
     return (
