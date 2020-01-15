@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
+import { ModalProps } from '../types'
 import AppContext from './context/AppContext'
 import { database } from './utilities/firebase'
 import { randomString } from './utilities/functions'
 import { useAuth } from './utilities/hooks'
 
-const ModalSignUp = ({ isOpen, toggleModal }) => {
+const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
     // Authentication
     const auth = useAuth()
 
@@ -13,15 +14,17 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     const { selectedDate, setModal } = useContext(AppContext)
 
     // State
-    const [names, setNames] = useState([{ id: 0, firstName: '', lastName: '' }])
+    const [names, setNames] = useState<Array<{ [key: string]: any }>>([
+        { id: 0, firstName: '', lastName: '' },
+    ])
     const [email, setEmail] = useState('')
     const [error, setError] = useState('')
     const [isLoading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
 
     // Reference
-    const nameInput = useRef(null)
-    const emailInput = useRef(null)
+    const nameInput = useRef<HTMLInputElement>(null)
+    const emailInput = useRef<HTMLInputElement>(null)
 
     // EFfect to reset the values to the initial values
     useEffect(() => {
@@ -52,7 +55,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     }, [isOpen, auth.user])
 
     // Handle name changes
-    const handleNameChange = ({ target }) => {
+    const handleNameChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         // Get the ID
         const id = Number(target.id.split('-').pop())
 
@@ -69,19 +72,25 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     }
 
     // Handle email changes
-    const handleEmailChange = ({ target: { value } }) => {
+    const handleEmailChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(value)
     }
 
     // Handle form submit
-    const handleSubmit = async event => {
+    const handleSubmit = async (
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent> & React.FormEvent<HTMLFormElement>
+    ) => {
         event.preventDefault()
 
         // Validate names
         for (const { firstName, lastName } of names) {
             if (firstName === '' || lastName === '') {
                 setError('ERROR_INVALID_NAME')
-                nameInput.current.focus()
+
+                if (nameInput.current) {
+                    nameInput.current.focus()
+                }
+
                 return
             }
         }
@@ -89,7 +98,11 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
         // Validate the email
         if (email === '' || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
             setError('ERROR_INVALID_EMAIL')
-            emailInput.current.focus()
+
+            if (emailInput.current) {
+                emailInput.current.focus()
+            }
+
             return
         }
 
@@ -169,7 +182,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     }
 
     // Remove a name
-    const removeName = id => {
+    const removeName = (id: string) => {
         const newNames = names.filter(name => name.id !== id)
         setNames(newNames)
     }
@@ -274,7 +287,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                         <button
                             type="button"
                             className="button button-primary button-link button-small button-add"
-                            onClick={!isLoading ? addName : null}
+                            onClick={!isLoading ? addName : undefined}
                             tabIndex={-1}
                         >
                             Ik neem nog iemand mee

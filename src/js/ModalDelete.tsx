@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
+import { ModalProps } from '../types'
 import AppContext from './context/AppContext'
 import { database } from './utilities/firebase'
 
-const ModalDelete = ({ isOpen, toggleModal }) => {
+const ModalDelete: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
     // Context
     const { selectedDate, selectedRegistrationId } = useContext(AppContext)
 
@@ -19,8 +20,12 @@ const ModalDelete = ({ isOpen, toggleModal }) => {
     }, [isOpen])
 
     // Handle form submit
-    const handleSubmit = async event => {
+    const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
+
+        if (!selectedRegistrationId) {
+            return
+        }
 
         // Database reference
         const registrationsRef = database.collection('registrations')

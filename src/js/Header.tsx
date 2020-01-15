@@ -26,7 +26,7 @@ const Header = () => {
         <header className="header">
             <div className="header-bar">
                 <p>Vrije Baptistengemeente Emmen</p>
-                {!auth.user ? (
+                {auth.user === null ? null : !auth.user ? (
                     <button onClick={() => setModal('signin')}>Inloggen</button>
                 ) : (
                     <p>

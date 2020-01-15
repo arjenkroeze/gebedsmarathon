@@ -1,14 +1,17 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
+import { WeekProps } from '../types'
 import AppContext from './context/AppContext'
-import WeekContext from './context/WeekContext'
 import Hour from './Hour'
 
-function Week(props) {
+const Week: React.FC<WeekProps> = props => {
     const { startDate, endDate, registrations } = useContext(AppContext)
-    const [hover, setHover] = useState(-1)
 
     // Array to store the title of the days
-    const dayTitles = [<th key="0">Week {props.weekNumber}</th>]
+    const dayTitles = [
+        <th key="0" className="week-cell-header">
+            Week {props.weekNumber}
+        </th>,
+    ]
 
     // For every day of the week...
     for (let x = 0; x < 7; x++) {
@@ -44,7 +47,7 @@ function Week(props) {
 
         // Every day starts with a cell that contains the hour notation
         days.push(
-            <td key={i} className={`week-hour${hover === i ? ` bg-light` : ``}`}>
+            <td key={i} className="week-hour">
                 {i}.00 - {i + 1}.00
             </td>
         )
@@ -97,16 +100,14 @@ function Week(props) {
     }
 
     return (
-        <WeekContext.Provider value={{ setHover }}>
-            <div className="week-wrapper">
-                <table className="week">
-                    <thead className="week-header">
-                        <tr>{dayTitles}</tr>
-                    </thead>
-                    <tbody className="week-body">{hours}</tbody>
-                </table>
-            </div>
-        </WeekContext.Provider>
+        <div className="week-wrapper">
+            <table className="week">
+                <thead className="week-header">
+                    <tr>{dayTitles}</tr>
+                </thead>
+                <tbody className="week-body">{hours}</tbody>
+            </table>
+        </div>
     )
 }
 

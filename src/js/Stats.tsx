@@ -4,11 +4,11 @@ import AppContext from './context/AppContext'
 const Stats = () => {
     const { startDate, endDate, registrations } = useContext(AppContext)
     const [hoursBusy, setHoursBusy] = useState(0)
-    const numberOfHours = Math.abs(startDate - endDate) / 36e5
+    const numberOfHours = Math.abs(startDate.getTime() - endDate.getTime()) / 36e5
 
     // Effect to calculate the number of busy hours
     useEffect(() => {
-        const uniqueDates = []
+        const uniqueDates: number[] = []
         const uniqueRegistrations = registrations.reduce((hoursBusy, registration) => {
             const registrationDate = new Date(registration.date.seconds * 1000).getTime()
 
