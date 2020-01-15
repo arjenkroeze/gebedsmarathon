@@ -4,14 +4,14 @@ import 'firebase/firestore'
 
 // Add your Firebase credentials
 firebase.initializeApp({
-    apiKey: 'AIzaSyCp0BI2EP34LinOYTaAVHZMwhlWWNT6-fI',
-    authDomain: 'gebedsrooster-e99b9.firebaseapp.com',
-    databaseURL: 'https://gebedsrooster-e99b9.firebaseio.com',
-    projectId: 'gebedsrooster-e99b9',
-    storageBucket: 'gebedsrooster-e99b9.appspot.com',
-    messagingSenderId: '546240000076',
-    appId: '1:546240000076:web:3862350dc691c2369e44e9',
-    measurementId: 'G-Y1V8FQ2WF0',
+    apiKey: 'AIzaSyAnzHl4xoddlWj6j4OjIpg3kqiyAx_9I3Y',
+    authDomain: 'gebedsmarathon.firebaseapp.com',
+    databaseURL: 'https://gebedsmarathon.firebaseio.com',
+    projectId: 'gebedsmarathon',
+    storageBucket: 'gebedsmarathon.appspot.com',
+    messagingSenderId: '321622826585',
+    appId: '1:321622826585:web:9937e5288d41ad2174db48',
+    measurementId: 'G-Q4PCBRB9KR',
 })
 
 const auth = firebase.auth()
