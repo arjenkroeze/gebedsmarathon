@@ -54,7 +54,7 @@
     &.is-registered {
         background-color: mix($yellow, $white, 25%);
 
-        &:hover {
+        &:not(.is-history):hover {
             background-color: mix($yellow, $white, 40%);
         }
     }
@@ -71,7 +71,6 @@
 
     &.is-history {
         opacity: 0.5;
-        cursor: not-allowed;
     }
 }
 

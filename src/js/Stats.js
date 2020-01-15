@@ -35,7 +35,7 @@ const Stats = () => {
                     />
                 </div>
                 <div className="progress-status">
-                    {hoursBusy} / {numberOfHours - hoursBusy} uren bezet ({percentageOccupied}%)
+                    {hoursBusy} / {numberOfHours} uren bezet ({percentageOccupied}%)
                 </div>
             </div>
         </div>

@@ -14,7 +14,7 @@ import Week from './Week'
 
 function App() {
     // 1 march 2020, 11:00
-    const startDate = new Date(2020, 0, 1, 11)
+    const startDate = new Date(2020, 2, 1, 11)
 
     // 22 march 2020, 10:00
     const endDate = new Date(2020, 2, 22, 10)
@@ -33,18 +33,24 @@ function App() {
                 .collection('registrations')
                 .orderBy('created', 'asc')
                 .onSnapshot(async querySnapshot => {
+                    // Array to store registrations
                     const results = []
+
+                    // For every registration...
                     for (const document of querySnapshot.docs) {
+                        // Retrieve data including the document ID
                         const registration = document.data()
                         registration.id = document.id
-
                         results.push(registration)
 
                         // Convert the timestamp to a Date-object
-                        const date = new Date(registration.date.seconds * 1000)
+                        const registrationDate = new Date(registration.date.seconds * 1000)
 
                         // Send a reminder if the registration is 24 hours upfront
-                        if (date.getTime() - Date.now() < 86400000 && registration.needsReminder) {
+                        if (
+                            registrationDate.getTime() - Date.now() < 86400000 &&
+                            registration.needsReminder
+                        ) {
                             await sendReminder(registration)
                         }
                     }
@@ -135,7 +141,7 @@ function App() {
             },
         })
 
-        // Very important to update the reminderSent flag
+        // Very important to update the flag for sending a reminder
         await database
             .collection('registrations')
             .doc(registration.id)

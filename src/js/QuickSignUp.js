@@ -207,6 +207,8 @@ const QuickSignUp = () => {
             }
         }
 
+        const within24Hours = selectedDate.getTime() - Date.now() < 86400000
+
         // Add the registration to the database
         await registrationsRef.add({
             created: new Date(),
@@ -214,7 +216,7 @@ const QuickSignUp = () => {
             name: `${firstName} ${lastName}`,
             email,
             uid: user.uid,
-            needsReminder: true,
+            needsReminder: !within24Hours,
         })
 
         // Flag to show a success message

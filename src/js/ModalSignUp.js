@@ -143,13 +143,15 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
 
         // Add registrations to the batch
         names.forEach((name, index) => {
+            const within24Hours = selectedDate.getTime() - Date.now() < 86400000
+
             batch.set(registrationsRef.doc(), {
-                created: new Date(new Date().getTime() + index),
+                created: new Date(Date.now() + index),
                 date: selectedDate,
                 name: `${name.firstName} ${name.lastName}`,
                 email,
                 uid: user.uid,
-                needsReminder: !index,
+                needsReminder: !index && !within24Hours,
             })
         })
 
