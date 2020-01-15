@@ -14,7 +14,7 @@ import Week from './Week'
 
 function App() {
     // 1 march 2020, 11:00
-    const startDate = new Date(2020, 2, 1, 11)
+    const startDate = new Date(2020, 0, 1, 11)
 
     // 22 march 2020, 10:00
     const endDate = new Date(2020, 2, 22, 10)
@@ -128,10 +128,10 @@ function App() {
                 subject: 'Een herinnering voor morgen',
                 text: `Beste ${
                     registration.name
-                },\r\nDit is een geautomatiseerd bericht ter herinnering dat je morgen om <strong>${registrationDate.getHours()}.00 uur</strong> staat ingeschreven voor de gebedsmarathon.\r\nWees gezegend!`,
+                },\r\nHerinnering: morgen om <strong>${registrationDate.getHours()}.00 uur</strong> sta je ingeschreven voor de gebedsmarathon.\r\nWees gezegend!`,
                 html: `<p>Beste ${
                     registration.name
-                },</p><p>Dit is een geautomatiseerd bericht ter herinnering dat je morgen om <strong>${registrationDate.getHours()}.00 uur</strong> staat ingeschreven voor de gebedsmarathon.</p><p>Wees gezegend!</p>`,
+                },</p><p>Herinnering: morgen om <strong>${registrationDate.getHours()}.00 uur</strong> sta je ingeschreven voor de gebedsmarathon.</p><p>Wees gezegend!</p>`,
             },
         })
 
@@ -139,7 +139,7 @@ function App() {
         await database
             .collection('registrations')
             .doc(registration.id)
-            .update({ needsReminder: true })
+            .update({ needsReminder: false })
     }
 
     return (
