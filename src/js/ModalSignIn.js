@@ -23,6 +23,14 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     useEffect(() => {
         setValues({ email: '', password: '' })
         setError('')
+
+        if (isOpen) {
+            setTimeout(() => {
+                if (emailInput.current) {
+                    emailInput.current.focus()
+                }
+            }, 25)
+        }
     }, [isOpen])
 
     // Handle email changes

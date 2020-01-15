@@ -61,13 +61,17 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
             {requested ? (
                 <ModalBody>
                     <p className="text-center">
-                        Er is een nieuw wachtwoord verstuurd naar je e-mail.
+                        Er is een mail verstuurd met instructies om je wachtwoord te resetten.
                     </p>
-                    <div className="d-flex justify-content-end">
-                        <button type="button" className="button" onClick={toggleModal}>
+                    <p className="text-center mb-0">
+                        <button
+                            type="button"
+                            className="button button-link button-primary pb-0"
+                            onClick={toggleModal}
+                        >
                             Sluiten
                         </button>
-                    </div>
+                    </p>
                 </ModalBody>
             ) : (
                 <ModalBody>

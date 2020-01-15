@@ -43,11 +43,11 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
             setSuccess(false)
 
             // Focus on the input with a short delay to spare the animation
-            if (nameInput.current) {
-                setTimeout(() => {
+            setTimeout(() => {
+                if (nameInput.current) {
                     nameInput.current.focus()
-                }, 25)
-            }
+                }
+            }, 25)
         }
     }, [isOpen, auth.user])
 

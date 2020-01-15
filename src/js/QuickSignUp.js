@@ -20,13 +20,18 @@ const QuickSignUp = () => {
     const { startDate, endDate, setModal } = useContext(AppContext)
 
     // State
-    const referralDate = startDate.getTime() > Date.now() ? startDate : new Date()
+    const [referralDate, setReferralDate] = useState(new Date())
     const [dateOptions, setDateOptions] = useState([])
     const [hourOptions, setHourOptions] = useState([])
     const [values, setValues] = useState(initialValues)
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState('')
     const [isLoading, setLoading] = useState(false)
+
+    // Make sure no registrations are made in history, so replace the startDate with a new Date
+    useEffect(() => {
+        setReferralDate(startDate.getTime() > Date.now() ? startDate : new Date())
+    }, [startDate])
 
     // EFfect to reset the values to the initial values
     useEffect(() => {
