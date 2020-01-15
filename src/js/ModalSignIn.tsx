@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
+import { ModalProps } from '../types'
 import AppContext from './context/AppContext'
 import { useAuth } from './utilities/hooks'
 
-const ModalSignUp = ({ isOpen, toggleModal }) => {
+const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
     // Authentication
     const auth = useAuth()
 
@@ -16,8 +17,8 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     const { setModal } = useContext(AppContext)
 
     // Reference
-    const emailInput = useRef(null)
-    const passwordInput = useRef(null)
+    const emailInput = useRef<HTMLInputElement>(null)
+    const passwordInput = useRef<HTMLInputElement>(null)
 
     // Reset state on opening/closing the modal
     useEffect(() => {
@@ -34,24 +35,34 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     }, [isOpen])
 
     // Handle email changes
-    const handleChange = ({ target: { name, value } }) => {
+    const handleChange = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
         setError('')
         setValues(values => ({ ...values, [name]: value }))
     }
 
     // Handle form submit
-    const handleSubmit = async event => {
+    const handleSubmit = async (
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent> & React.FormEvent<HTMLFormElement>
+    ) => {
         event.preventDefault()
 
         if (values.email === '' || !/^[^@]+@[^@]+\.[^@]+$/.test(values.email)) {
             setError('ERROR_INVALID_EMAIL')
-            emailInput.current.focus()
+
+            if (emailInput.current) {
+                emailInput.current.focus()
+            }
+
             return
         }
 
         if (values.password === '') {
             setError('ERROR_INVALID_PASSWORD')
-            passwordInput.current.focus()
+
+            if (passwordInput.current) {
+                passwordInput.current.focus()
+            }
+
             return
         }
 

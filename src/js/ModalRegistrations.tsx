@@ -1,23 +1,24 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
+import { ModalProps, Registration } from '../types'
 import AppContext from './context/AppContext'
 import { useAuth } from './utilities/hooks'
 
-const ModalRegistrations = ({ isOpen, toggleModal }) => {
+const ModalRegistrations: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
     // Context
     const { registrations, selectedDate, setModal } = useContext(AppContext)
 
     // State
-    const [filteredRegistrations, setFilteredRegistrations] = useState([])
+    const [filteredRegistrations, setFilteredRegistrations] = useState<Registration[]>([])
 
     // Effect to filter registrations on the selected date
     useEffect(() => {
-        const filteredRegistratinos = registrations.filter(registration => {
+        const filteredRegistrations = registrations.filter(registration => {
             const registrationDate = new Date(registration.date.seconds * 1000)
             return registrationDate.getTime() === selectedDate.getTime()
         })
 
-        setFilteredRegistrations(filteredRegistratinos)
+        setFilteredRegistrations(filteredRegistrations)
     }, [selectedDate, registrations])
 
     // Format the date, e.g. 'zondag 1 maart'
@@ -62,7 +63,7 @@ const ModalRegistrations = ({ isOpen, toggleModal }) => {
     )
 }
 
-const RegistrationListItem = ({ id, name, uid }) => {
+const RegistrationListItem: React.FC<Registration> = ({ id, name, uid }) => {
     // Authentication
     const auth = useAuth()
 

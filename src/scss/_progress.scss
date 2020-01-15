@@ -10,9 +10,9 @@
 .progress-bar {
     position: relative;
     width: 500px;
-    height: 12px;
+    height: 8px;
     background-color: $white;
-    border-radius: 12px;
+    border-radius: 8px;
 }
 
 .progress-bar-fill {
@@ -21,7 +21,7 @@
     left: 0;
     bottom: 0;
     background-color: $blue;
-    border-radius: 12px;
+    border-radius: 8px;
 
     &:after {
         content: '';

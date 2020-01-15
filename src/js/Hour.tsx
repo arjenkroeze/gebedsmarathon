@@ -1,8 +1,9 @@
 import classNames from 'classnames'
 import React, { useContext } from 'react'
+import { HourProps } from '../types'
 import AppContext from './context/AppContext'
 
-const Hour = ({
+const Hour: React.FC<HourProps> = ({
     datetime,
     isActive,
     isDisabled,
@@ -40,7 +41,7 @@ const Hour = ({
     )
 }
 
-const Registration = ({ name, count }) => (
+const Registration: React.FC<{ name: string; count: number }> = ({ name, count }) => (
     <div className="week-cell-registration">
         <div className="week-cell-registration-name">{name}</div>
         {count > 1 && <div className="week-cell-registration-count">en nog {count - 1}</div>}

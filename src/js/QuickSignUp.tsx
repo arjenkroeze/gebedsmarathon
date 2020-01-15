@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { DateOption, HourOption } from '../types'
 import AppContext from './context/AppContext'
 import { database } from './utilities/firebase'
 import { randomString } from './utilities/functions'
 import { useAuth } from './utilities/hooks'
 
-const initialValues = {
+const initialValues: { [key: string]: any } = {
     selectedDate: '',
     selectedHour: '0',
     firstName: '',
@@ -21,8 +22,8 @@ const QuickSignUp = () => {
 
     // State
     const [referralDate, setReferralDate] = useState(new Date())
-    const [dateOptions, setDateOptions] = useState([])
-    const [hourOptions, setHourOptions] = useState([])
+    const [dateOptions, setDateOptions] = useState<DateOption[]>([])
+    const [hourOptions, setHourOptions] = useState<HourOption[]>([])
     const [values, setValues] = useState(initialValues)
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState('')
@@ -53,7 +54,7 @@ const QuickSignUp = () => {
     // This effect will populate the options for selecting a day
     useEffect(() => {
         // The temporary array where we will store the dates
-        const dates = []
+        const dates: DateOption[] = []
 
         // Calculate the number of days we need to render
         const numberOfDays = Math.ceil(
@@ -107,7 +108,7 @@ const QuickSignUp = () => {
         }
 
         // The temporary array where hours are stored
-        const hours = []
+        const hours: HourOption[] = []
 
         // For every hour in a day...
         for (let i = 0; i < 24; i++) {
@@ -133,12 +134,16 @@ const QuickSignUp = () => {
     }, [values.selectedDate, referralDate])
 
     // Handle input changes
-    function handleChange({ target: { name, value } }) {
+    function handleChange({
+        target: { name, value },
+    }: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setValues(values => ({ ...values, [name]: value }))
     }
 
     // Handle form submitting
-    async function handleSubmit(event) {
+    async function handleSubmit(
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent> & React.FormEvent<HTMLFormElement>
+    ) {
         event.preventDefault()
 
         // Destructure to improve readability

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Registration } from '../types'
 import AppContext from './context/AppContext'
 import Header from './Header'
 import Location from './Location'
@@ -20,10 +21,10 @@ function App() {
     const endDate = new Date(2020, 2, 22, 10)
 
     // State
-    const [registrations, setRegistrations] = useState([])
+    const [registrations, setRegistrations] = useState<Registration[]>([])
     const [selectedDate, setSelectedDate] = useState(new Date())
-    const [selectedRegistrationId, setSelectedRegistrationId] = useState(null)
-    const [modal, setModal] = useState(null)
+    const [selectedRegistrationId, setSelectedRegistrationId] = useState<string | null>(null)
+    const [modal, setModal] = useState<string | null>(null)
 
     // EFfect to fetch all registrations from the database
     useEffect(() => {
@@ -39,8 +40,10 @@ function App() {
                     // For every registration...
                     for (const document of querySnapshot.docs) {
                         // Retrieve data including the document ID
-                        const registration = document.data()
+                        const registration: Registration = { ...(document.data() as Registration) }
+
                         registration.id = document.id
+
                         results.push(registration)
 
                         // Convert the timestamp to a Date-object
@@ -54,6 +57,8 @@ function App() {
                             await sendReminder(registration)
                         }
                     }
+
+                    // Update registrations
                     setRegistrations(results)
                 })
         }
@@ -123,7 +128,7 @@ function App() {
     }
 
     // Send a reminder
-    async function sendReminder(registration) {
+    async function sendReminder(registration: Registration) {
         const registrationDate = new Date(registration.date.seconds * 1000)
 
         await database.collection('mail').add({

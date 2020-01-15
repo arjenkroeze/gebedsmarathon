@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
+import { ModalProps } from '../types'
 import { useAuth } from './utilities/hooks'
 
-const ModalSignUp = ({ isOpen, toggleModal }) => {
+const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
     // Authentication
     const auth = useAuth()
 
@@ -13,7 +14,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     const [requested, setRequested] = useState(false)
 
     // Reference
-    const emailInput = useRef(null)
+    const emailInput = useRef<HTMLInputElement>(null)
 
     // Reset state on opening/closing the modal
     useEffect(() => {
@@ -23,18 +24,24 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
     }, [isOpen])
 
     // Handle email changes
-    const handleChange = ({ target: { value } }) => {
+    const handleChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(value)
         setError('')
     }
 
     // Handle form submit
-    const handleSubmit = async event => {
+    const handleSubmit = async (
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent> & React.FormEvent<HTMLFormElement>
+    ) => {
         event.preventDefault()
 
         if (email === '' || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
             setError('ERROR_INVALID_EMAIL')
-            emailInput.current.focus()
+
+            if (emailInput.current) {
+                emailInput.current.focus()
+            }
+
             return
         }
 
