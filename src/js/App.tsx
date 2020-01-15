@@ -5,8 +5,6 @@ import Header from './Header'
 import Location from './Location'
 import ModalDelete from './ModalDelete'
 import ModalRegistrations from './ModalRegistrations'
-import ModalRequestPassword from './ModalRequestPassword'
-import ModalSignIn from './ModalSignIn'
 import ModalSignUp from './ModalSignUp'
 import QuickSignUp from './QuickSignUp'
 import Stats from './Stats'
@@ -23,7 +21,7 @@ function App() {
     // State
     const [registrations, setRegistrations] = useState<Registration[]>([])
     const [selectedDate, setSelectedDate] = useState(new Date())
-    const [selectedRegistrationId, setSelectedRegistrationId] = useState<string | null>(null)
+    const [selectedRegistration, setSelectedRegistration] = useState<Registration | null>(null)
     const [modal, setModal] = useState<string | null>(null)
 
     // EFfect to fetch all registrations from the database
@@ -162,8 +160,8 @@ function App() {
                 setModal,
                 selectedDate,
                 setSelectedDate,
-                selectedRegistrationId,
-                setSelectedRegistrationId,
+                selectedRegistration,
+                setSelectedRegistration,
             }}
         >
             <Header />
@@ -171,8 +169,6 @@ function App() {
             <QuickSignUp />
             {weeks}
             <Location />
-            <ModalSignIn isOpen={modal === 'signin'} toggleModal={toggleModal} />
-            <ModalRequestPassword isOpen={modal === 'request-password'} toggleModal={toggleModal} />
             <ModalSignUp isOpen={modal === 'signup'} toggleModal={toggleModal} />
             <ModalRegistrations isOpen={modal === 'registrations'} toggleModal={toggleModal} />
             <ModalDelete isOpen={modal === 'delete'} toggleModal={toggleModal} />

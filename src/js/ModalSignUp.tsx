@@ -3,13 +3,8 @@ import { Modal, ModalBody } from 'reactstrap'
 import { ModalProps } from '../types'
 import AppContext from './context/AppContext'
 import { database } from './utilities/firebase'
-import { randomString } from './utilities/functions'
-import { useAuth } from './utilities/hooks'
 
 const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
-    // Authentication
-    const auth = useAuth()
-
     // Context
     const { selectedDate, setModal } = useContext(AppContext)
 
@@ -28,17 +23,8 @@ const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
 
     // EFfect to reset the values to the initial values
     useEffect(() => {
-        const defaultNames = [{ id: 0, firstName: '', lastName: '' }]
-
-        if (auth.user) {
-            const [firstName, lastName] =
-                auth.user && auth.user.displayName ? auth.user.displayName.split('|') : ['', '']
-            defaultNames[0].firstName = firstName
-            defaultNames[0].lastName = lastName
-        }
-
-        setNames(defaultNames)
-        setEmail(auth.user ? auth.user.email : '')
+        setNames([{ id: 0, firstName: '', lastName: '' }])
+        setEmail('')
         setError('')
 
         if (isOpen) {
@@ -52,7 +38,7 @@ const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
                 }
             }, 25)
         }
-    }, [isOpen, auth.user])
+    }, [isOpen])
 
     // Handle name changes
     const handleNameChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,45 +97,6 @@ const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
 
         // Collection reference
         const registrationsRef = database.collection('registrations')
-        const mailRef = database.collection('mail')
-
-        // Create a random password
-        const password = randomString()
-
-        // Check if a user is logged in
-        let user = auth.user ? auth.user : null
-
-        // Create a user if the user is not logged in
-        if (!user) {
-            try {
-                // Create a new account
-                user = await auth.signup(email, password)
-
-                // Inform the user by sending the username and password by email
-                await mailRef.add({
-                    from: 'Gebedsmarathon <noreply@gebedsmarathon.nl>',
-                    to: [email],
-                    message: {
-                        messageId: 'account-creation',
-                        subject: 'Account aangemaakt',
-                        text: `Er is een account voor je aangemaakt op www.gebedsmarathon.nl:\r\n\r\nGebruikersnaam: ${email}\r\nWachtwoord: ${password}\r\n\r\nMet dit account kun je je inschrijvingen beheren.`,
-                        html: `<p>Er is een account voor je aangemaakt op <a href="https://www.gebedsmarathon.nl">www.gebedsmarathon.nl</a>:</p><p>Gebruikersnaam: ${email}<br />Wachtwoord: ${password}</p><p>Met dit account kun je je inschrijvingen beheren.<p>`,
-                    },
-                })
-
-                // Little cheat to save the first and last name of the user
-                await auth.updateProfile(`${names[0].firstName}|${names[0].lastName}`)
-            } catch (error) {
-                // Catch existing users
-                if (error.code === 'auth/email-already-in-use') {
-                    setError('EMAIL_IN_USE')
-                }
-
-                setLoading(false)
-
-                return
-            }
-        }
 
         // Prepare the Firestore batch
         const batch = database.batch()
@@ -163,7 +110,6 @@ const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
                 date: selectedDate,
                 name: `${name.firstName} ${name.lastName}`,
                 email,
-                uid: user.uid,
                 needsReminder: !index && !within24Hours,
             })
         })
@@ -304,7 +250,7 @@ const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
                             onChange={handleEmailChange}
                             ref={emailInput}
                             required={true}
-                            readOnly={isLoading || auth.user}
+                            readOnly={isLoading}
                         />
                         {error === 'ERROR_INVALID_EMAIL' && (
                             <p className="form-group-help text-danger">

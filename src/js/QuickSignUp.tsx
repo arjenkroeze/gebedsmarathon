@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { DateOption, HourOption } from '../types'
 import AppContext from './context/AppContext'
 import { database } from './utilities/firebase'
-import { randomString } from './utilities/functions'
-import { useAuth } from './utilities/hooks'
 
 const initialValues: { [key: string]: any } = {
     selectedDate: '',
@@ -14,9 +12,6 @@ const initialValues: { [key: string]: any } = {
 }
 
 const QuickSignUp = () => {
-    // Authentication
-    const auth = useAuth()
-
     // Context
     const { startDate, endDate, setModal } = useContext(AppContext)
 
@@ -29,27 +24,18 @@ const QuickSignUp = () => {
     const [error, setError] = useState('')
     const [isLoading, setLoading] = useState(false)
 
+    useEffect(() => {
+        if (success) {
+            setTimeout(() => {
+                setSuccess(false)
+            }, 5000)
+        }
+    }, [success])
+
     // Make sure no registrations are made in history, so replace the startDate with a new Date
     useEffect(() => {
         setReferralDate(startDate.getTime() > Date.now() ? startDate : new Date())
     }, [startDate])
-
-    // EFfect to reset the values to the initial values
-    useEffect(() => {
-        const defaultValues = initialValues
-
-        // Populate values with user data
-        if (auth.user) {
-            const [firstName, lastName] =
-                auth.user && auth.user.displayName ? auth.user.displayName.split('|') : ['', '']
-            defaultValues.firstName = firstName
-            defaultValues.lastName = lastName
-            defaultValues.email = auth.user.email
-        }
-
-        setValues(defaultValues)
-        setError('')
-    }, [auth.user])
 
     // This effect will populate the options for selecting a day
     useEffect(() => {
@@ -170,57 +156,14 @@ const QuickSignUp = () => {
         registrationDate.setMinutes(0)
         registrationDate.setSeconds(0)
 
-        // References
-        const registrationsRef = database.collection('registrations')
-        const mailRef = database.collection('mail')
-
-        // Create a random password
-        const password = randomString()
-
-        // Check if a user is logged in
-        let user = auth.user ? auth.user : null
-
-        // Create a user if the user is not logged in
-        if (!user) {
-            try {
-                // Create a new account
-                user = await auth.signup(email, password)
-
-                // Inform the user by sending the username and password by email
-                await mailRef.add({
-                    from: 'Gebedsmarathon <noreply@gebedsmarathon.nl>',
-                    to: [email],
-                    message: {
-                        messageId: 'account-creation',
-                        subject: 'Account aangemaakt',
-                        text: `Er is een account voor je aangemaakt op www.gebedsmarathon.nl:\r\n\r\nGebruikersnaam: ${email}\r\nWachtwoord: ${password}\r\n\r\nMet dit account kun je je inschrijvingen beheren.`,
-                        html: `<p>Er is een account voor je aangemaakt op <a href="https://www.gebedsmarathon.nl">www.gebedsmarathon.nl</a>:</p><p>Gebruikersnaam: ${email}<br />Wachtwoord: ${password}</p><p>Met dit account kun je je inschrijvingen beheren.<p>`,
-                    },
-                })
-
-                // Little cheat to save the first and last name of the user
-                await auth.updateProfile(`${firstName}|${lastName}`)
-            } catch (error) {
-                // Catch existing users
-                if (error.code === 'auth/email-already-in-use') {
-                    setError('EMAIL_IN_USE')
-                }
-
-                setLoading(false)
-
-                throw error
-            }
-        }
-
-        const within24Hours = selectedDate.getTime() - Date.now() < 86400000
+        const within24Hours = registrationDate.getTime() - Date.now() < 86400000
 
         // Add the registration to the database
-        await registrationsRef.add({
+        await database.collection('registrations').add({
             created: new Date(),
             date: registrationDate,
             name: `${firstName} ${lastName}`,
             email,
-            uid: user.uid,
             needsReminder: !within24Hours,
         })
 
@@ -230,18 +173,6 @@ const QuickSignUp = () => {
         setLoading(false)
 
         setValues(initialValues)
-    }
-
-    if (success) {
-        return (
-            <div className="quick-signup quick-signup-success">
-                <h3>Gelukt!</h3>
-                <p>Bedankt voor je inschrijving.</p>
-                <button className="button" onClick={() => setSuccess(false)}>
-                    Inschrijven
-                </button>
-            </div>
-        )
     }
 
     return (
@@ -300,7 +231,6 @@ const QuickSignUp = () => {
                 name="email"
                 value={values.email}
                 onChange={handleChange}
-                readOnly={auth.user}
             />
 
             {error === 'EMAIL_IN_USE' && (
@@ -310,10 +240,16 @@ const QuickSignUp = () => {
                 </p>
             )}
 
-            <button className="button button-primary" onClick={handleSubmit}>
-                Inschrijven
-                {isLoading && <span className="spinner-border spinner-border-sm"></span>}
-            </button>
+            {success ? (
+                <button type="button" className="button button-success">
+                    Gelukt!
+                </button>
+            ) : (
+                <button className="button button-primary" onClick={handleSubmit}>
+                    Inschrijven
+                    {isLoading && <span className="spinner-border spinner-border-sm"></span>}
+                </button>
+            )}
         </form>
     )
 }

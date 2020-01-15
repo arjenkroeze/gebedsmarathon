@@ -48,8 +48,8 @@
     position: relative;
     z-index: 1;
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
     width: 100%;
     margin-bottom: 40px;
     padding: 12px;
@@ -57,36 +57,11 @@
     color: rgba($white, 0.8);
     font-size: 15px;
     font-weight: 500;
-
-    p {
-        margin-bottom: 0;
-    }
-
-    button {
-        appearance: none;
-        margin-left: 8px;
-        padding: 0;
-        background-color: transparent;
-        border: 0;
-        color: inherit;
-        font-size: inherit;
-        font-weight: inherit;
-        line-height: inherit;
-        text-decoration: underline;
-        cursor: pointer;
-
-        &:hover {
-            text-decoration: none;
-        }
-    }
+    text-align: center;
 }
 
 @media (max-width: 768px) {
     .header {
         min-height: 40vh;
-    }
-
-    .header-bar span {
-        display: none;
     }
 }

@@ -4,7 +4,6 @@ export interface Registration {
     date: firebase.firestore.Timestamp
     name: string
     email: string
-    uid: string
     needsReminder: boolean
     [key: string]: any
 }
@@ -16,8 +15,8 @@ export interface AppContext {
     setModal: React.Dispatch<React.SetStateAction<string | null>>
     selectedDate: Date
     setSelectedDate: React.Dispatch<React.SetStateAction<Date>>
-    selectedRegistrationId: string | null
-    setSelectedRegistrationId: React.Dispatch<React.SetStateAction<string | null>>
+    selectedRegistration: Registration | null
+    setSelectedRegistration: React.Dispatch<React.SetStateAction<Registration | null>>
 }
 
 export interface HourProps {
