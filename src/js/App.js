@@ -14,7 +14,7 @@ import Week from './Week'
 
 function App() {
     // 1 march 2020, 11:00
-    const startDate = new Date(2020, 0, 1, 11)
+    const startDate = new Date(2020, 2, 1, 11)
 
     // 22 march 2020, 10:00
     const endDate = new Date(2020, 2, 22, 10)
@@ -139,7 +139,7 @@ function App() {
         await database
             .collection('registrations')
             .doc(registration.id)
-            .update({ reminderSent: true })
+            .update({ needsReminder: true })
     }
 
     return (

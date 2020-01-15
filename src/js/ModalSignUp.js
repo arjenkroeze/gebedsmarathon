@@ -147,6 +147,7 @@ const ModalSignUp = ({ isOpen, toggleModal }) => {
                 created: new Date(new Date().getTime() + index),
                 date: selectedDate,
                 name: `${name.firstName} ${name.lastName}`,
+                email,
                 uid: user.uid,
                 needsReminder: !index,
             })

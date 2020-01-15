@@ -212,6 +212,7 @@ const QuickSignUp = () => {
             created: new Date(),
             date: registrationDate,
             name: `${firstName} ${lastName}`,
+            email,
             uid: user.uid,
             needsReminder: true,
         })
