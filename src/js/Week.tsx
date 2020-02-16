@@ -17,6 +17,7 @@ const Week: React.FC<WeekProps> = props => {
     for (let x = 0; x < 7; x++) {
         // Create the day's date
         const dayDate = new Date(props.startDate)
+        dayDate.setHours(0)
         dayDate.setDate(dayDate.getDate() + x)
 
         // Use the Intl API to format
@@ -29,7 +30,7 @@ const Week: React.FC<WeekProps> = props => {
         // Add to the array
         dayTitles.push(
             <th key={dayDate.getTime()} className="week-cell-header">
-                {formattedDayDate}
+                {dayDate.getTime() < endDate.getTime() ? formattedDayDate : null}
             </th>
         )
     }

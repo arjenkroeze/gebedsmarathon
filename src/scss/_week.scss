@@ -88,7 +88,7 @@
 .week-cell-registration {
     max-width: 139px;
     margin: auto;
-    line-height: 1;
+    line-height: 1.25;
 }
 
 .week-cell-registration-name {
@@ -100,5 +100,6 @@
 }
 
 .week-cell-registration-count {
+    margin-top: -2px;
     font-size: 13px;
 }

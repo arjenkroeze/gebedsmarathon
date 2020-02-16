@@ -5,7 +5,7 @@ service cloud.firestore {
     }
 
     match /mail/{mail} {
-      allow create: if request.auth.uid != null;
+      allow create: if true;
     }
   }
 }

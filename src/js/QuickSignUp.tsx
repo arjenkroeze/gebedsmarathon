@@ -48,7 +48,7 @@ const QuickSignUp = () => {
         )
 
         // For every day...
-        for (let j = 0; j < numberOfDays; j++) {
+        for (let j = 0; j <= numberOfDays; j++) {
             // Create a date object...
             const dayDate = new Date(referralDate)
             dayDate.setDate(dayDate.getDate() + j)
@@ -102,7 +102,10 @@ const QuickSignUp = () => {
             const hourDate = new Date(dayDate.setHours(i))
 
             // Only add an option if the referralDate has not passed yet
-            if (hourDate.getTime() >= referralDate.getTime()) {
+            if (
+                hourDate.getTime() >= referralDate.getTime() &&
+                hourDate.getTime() <= endDate.getTime()
+            ) {
                 hours.push({ label: `${i}.00 - ${i + 1}.00 uur`, hour: `${i}` })
             }
         }
@@ -117,7 +120,7 @@ const QuickSignUp = () => {
 
         // ...and set the selectedHour to the first item in the array
         setValues(values => ({ ...values, selectedHour: hours[0].hour }))
-    }, [values.selectedDate, referralDate])
+    }, [values.selectedDate, referralDate, endDate])
 
     // Handle input changes
     function handleChange({
