@@ -47,4 +47,5 @@ export interface WeekProps {
     startDate: Date
     endDate: Date
     weekNumber: number
+    isLoading: boolean
 }

@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
+import React, { FC, useContext } from 'react'
 import { WeekProps } from '../types'
 import AppContext from './context/AppContext'
 import Hour from './Hour'
 
-const Week: React.FC<WeekProps> = props => {
+const Week: FC<WeekProps> = props => {
     const { startDate, endDate, registrations } = useContext(AppContext)
 
     // Array to store the title of the days
@@ -101,7 +101,7 @@ const Week: React.FC<WeekProps> = props => {
     }
 
     return (
-        <div className="week-wrapper">
+        <div className={`week-wrapper ${props.isLoading ? `is-loading` : ``}`}>
             <table className="week">
                 <thead className="week-header">
                     <tr>{dayTitles}</tr>

@@ -1,6 +1,12 @@
 .week-wrapper {
     width: 100%;
     overflow-x: auto;
+    transition: opacity 0.2s;
+
+    &.is-loading {
+        opacity: 0.25;
+        pointer-events: none;
+    }
 }
 
 .week {

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import AppContext from './context/AppContext'
 
-const Stats = () => {
+const Stats: FC<{ isLoading: boolean }> = ({ isLoading }) => {
     const { startDate, endDate, registrations } = useContext(AppContext)
     const [hoursBusy, setHoursBusy] = useState(0)
     const numberOfHours = Math.abs(startDate.getTime() - endDate.getTime()) / 36e5
@@ -26,18 +26,22 @@ const Stats = () => {
     const percentageOccupied = Math.ceil((hoursBusy / numberOfHours) * 100)
 
     return (
-        <div className="stats">
-            <div className="progress">
-                <div className="progress-bar">
-                    <div
-                        className="progress-bar-fill"
-                        style={{ width: `${percentageOccupied}%` }}
-                    />
-                </div>
-                <div className="progress-status">
-                    {hoursBusy} / {numberOfHours} uren bezet ({percentageOccupied}%)
-                </div>
-            </div>
+        <div className="progress">
+            {isLoading ? (
+                <div className="spinner"></div>
+            ) : (
+                <>
+                    <div className="progress-bar">
+                        <div
+                            className="progress-bar-fill"
+                            style={{ width: `${percentageOccupied}%` }}
+                        />
+                    </div>
+                    <div className="progress-status">
+                        {hoursBusy} / {numberOfHours} uren bezet ({percentageOccupied}%)
+                    </div>
+                </>
+            )}
         </div>
     )
 }

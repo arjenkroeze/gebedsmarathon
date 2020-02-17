@@ -23,10 +23,13 @@ function App() {
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [selectedRegistration, setSelectedRegistration] = useState<Registration | null>(null)
     const [modal, setModal] = useState<string | null>(null)
+    const [isLoading, setLoading] = useState(false)
 
     // EFfect to fetch all registrations from the database
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true)
+
             // Listen to the snapshot from the Firestore
             database
                 .collection('registrations')
@@ -58,6 +61,7 @@ function App() {
 
                     // Update registrations
                     setRegistrations(results)
+                    setLoading(false)
                 })
         }
 
@@ -118,6 +122,7 @@ function App() {
                     startDate={weekStartDate}
                     endDate={weekEndDate}
                     weekNumber={weekNumber}
+                    isLoading={isLoading}
                 />
             )
 
@@ -165,7 +170,7 @@ function App() {
             }}
         >
             <Header />
-            <Stats />
+            <Stats isLoading={isLoading} />
             <QuickSignUp />
             {weeks}
             <Location />
