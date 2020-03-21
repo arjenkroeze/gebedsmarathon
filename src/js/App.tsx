@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Registration } from '../types'
 import AppContext from './context/AppContext'
 import Header from './Header'
-import Location from './Location'
 import ModalDelete from './ModalDelete'
 import ModalRegistrations from './ModalRegistrations'
 import ModalSignUp from './ModalSignUp'
@@ -16,7 +15,7 @@ function App() {
     const startDate = new Date(2020, 2, 1, 11)
 
     // 22 march 2020, 10:00
-    const endDate = new Date(2020, 2, 22, 10)
+    const endDate = new Date(2020, 3, 5, 10)
 
     // State
     const [registrations, setRegistrations] = useState<Registration[]>([])
@@ -175,7 +174,6 @@ function App() {
             <Stats isLoading={isLoading} />
             <QuickSignUp />
             {weeks}
-            <Location />
             <ModalSignUp isOpen={modal === 'signup'} toggleModal={toggleModal} />
             <ModalRegistrations isOpen={modal === 'registrations'} toggleModal={toggleModal} />
             <ModalDelete isOpen={modal === 'delete'} toggleModal={toggleModal} />
