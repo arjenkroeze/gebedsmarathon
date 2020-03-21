@@ -111,10 +111,12 @@ function App() {
             // Create the start date of the week which is the startDate plus the difference in days
             const weekStartDate = new Date(startDateCopy)
             weekStartDate.setDate(weekStartDate.getDate() + i)
+            weekStartDate.setHours(0, 0, 0)
 
             // Create the end date of the week, which is the start date + 6 days
             const weekEndDate = new Date(weekStartDate)
             weekEndDate.setDate(weekEndDate.getDate() + 6)
+            weekEndDate.setHours(23, 59, 59)
 
             weeks.push(
                 <Week
