@@ -48,15 +48,15 @@ function App() {
                         results.push(registration)
 
                         // Convert the timestamp to a Date-object
-                        const registrationDate = new Date(registration.date.seconds * 1000)
+                        // const registrationDate = new Date(registration.date.seconds * 1000)
 
-                        // Send a reminder if the registration is 24 hours upfront
-                        if (
-                            registrationDate.getTime() - Date.now() < 86400000 &&
-                            registration.needsReminder
-                        ) {
-                            await sendReminder(registration)
-                        }
+                        // // Send a reminder if the registration is 24 hours upfront
+                        // if (
+                        //     registrationDate.getTime() - Date.now() < 86400000 &&
+                        //     registration.needsReminder
+                        // ) {
+                        //     await sendReminder(registration)
+                        // }
                     }
 
                     // Update registrations
