@@ -11,6 +11,11 @@ export interface Registration {
 export interface AppContext {
     startDate: Date
     endDate: Date
+    dailyStartHour: number
+    dailyEndHour: number
+    weeklyStartDay: number
+    weeklyEndDay: number
+    maxRegistrations: number
     registrations: Registration[]
     setModal: React.Dispatch<React.SetStateAction<string | null>>
     selectedDate: Date

@@ -178,6 +178,10 @@ const QuickSignUp = () => {
         setValues(initialValues)
     }
 
+    if (endDate.getTime() <= Date.now()) {
+        return null
+    }
+
     return (
         <form className="quick-signup" onSubmit={handleSubmit}>
             <h3>Schrijf je in</h3>

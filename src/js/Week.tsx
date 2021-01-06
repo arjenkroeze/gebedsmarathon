@@ -3,8 +3,16 @@ import { WeekProps } from '../types'
 import AppContext from './context/AppContext'
 import Hour from './Hour'
 
-const Week: FC<WeekProps> = props => {
-    const { startDate, endDate, registrations } = useContext(AppContext)
+const Week: FC<WeekProps> = (props) => {
+    const {
+        startDate,
+        endDate,
+        dailyStartHour,
+        dailyEndHour,
+        weeklyStartDay,
+        weeklyEndDay,
+        registrations,
+    } = useContext(AppContext)
 
     // Array to store the title of the days
     const dayTitles = [
@@ -39,7 +47,7 @@ const Week: FC<WeekProps> = props => {
     let hours = []
 
     // For every hour in a day...
-    for (let i = 0; i < 24; i++) {
+    for (let i = dailyStartHour; i <= dailyEndHour; i++) {
         // Create a new date that will increase by the hour
         const hourDate = new Date(props.startDate).setHours(i)
 
@@ -54,13 +62,13 @@ const Week: FC<WeekProps> = props => {
         )
 
         // For every day in a week...
-        for (let j = 0; j < 7; j++) {
+        for (let j = weeklyStartDay; j <= weeklyEndDay; j++) {
             // Create the day date which is derived from the hour date
             const datetime = new Date(hourDate)
             datetime.setDate(datetime.getDate() + j)
 
             // Find registrations on this date
-            const filteredRegistrations = registrations.filter(registration => {
+            const filteredRegistrations = registrations.filter((registration) => {
                 // Time is stored in the Firestore by seconds.
                 // Multiply by 1000 to create a date in milliseconds.
                 const registrationDate = new Date(registration.date.seconds * 1000)
@@ -74,16 +82,21 @@ const Week: FC<WeekProps> = props => {
             // Date to check if the Hour is history or not
             const now = Date.now()
 
+            const hourIsDisabled =
+                startDate.getTime() > datetime.getTime() ||
+                endDate.getTime() < datetime.getTime() ||
+                datetime.getHours() < dailyStartHour ||
+                datetime.getHours() > dailyEndHour ||
+                datetime.getHours() === 17 || // Disable the 17th hour
+                datetime.getHours() === 18 // Disable the 18th hour
+
             // Render a column for every day
             days.push(
                 <Hour
                     key={datetime.getTime()}
                     datetime={datetime}
                     isActive={now > datetime.getTime() && now < datetime.getTime() + 3600000}
-                    isDisabled={
-                        startDate.getTime() > datetime.getTime() ||
-                        endDate.getTime() < datetime.getTime()
-                    }
+                    isDisabled={hourIsDisabled}
                     isHistory={now > datetime.getTime() + 3600000}
                     registrant={registrant}
                     registrationsCount={filteredRegistrations.length}
@@ -96,7 +109,7 @@ const Week: FC<WeekProps> = props => {
     }
 
     // Hide the week if it's history...
-    if (props.endDate.getTime() < Date.now()) {
+    if (props.endDate.getTime() < Date.now() || endDate.getTime() <= Date.now()) {
         return null
     }
 

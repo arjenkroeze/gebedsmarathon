@@ -1,17 +1,18 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
-import { ModalProps } from '../types'
+import { ModalProps, Registration } from '../types'
 import AppContext from './context/AppContext'
 import { database } from './utilities/firebase'
 
 const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
     // Context
-    const { selectedDate, setModal } = useContext(AppContext)
+    const { maxRegistrations, registrations, selectedDate, setModal } = useContext(AppContext)
 
     // State
     const [names, setNames] = useState<Array<{ [key: string]: any }>>([
         { id: 0, firstName: '', lastName: '' },
     ])
+    const [filteredRegistrations, setFilteredRegistrations] = useState<Registration[]>([])
     const [email, setEmail] = useState('')
     const [error, setError] = useState('')
     const [isLoading, setLoading] = useState(false)
@@ -40,13 +41,23 @@ const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
         }
     }, [isOpen])
 
+    // Effect to filter registrations on the selected date
+    useEffect(() => {
+        const filteredRegistrations = registrations.filter((registration) => {
+            const registrationDate = new Date(registration.date.seconds * 1000)
+            return registrationDate.getTime() === selectedDate.getTime()
+        })
+
+        setFilteredRegistrations(filteredRegistrations)
+    }, [selectedDate, registrations])
+
     // Handle name changes
     const handleNameChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         // Get the ID
         const id = Number(target.id.split('-').pop())
 
         // Update the names
-        const updatedNames = names.map(name => {
+        const updatedNames = names.map((name) => {
             if (name.id === id) {
                 name[target.name] = target.value
             }
@@ -124,12 +135,12 @@ const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
 
     // Add a name
     const addName = () => {
-        setNames(names => [...names, { id: names.length, firstName: '', lastName: '' }])
+        setNames((names) => [...names, { id: names.length, firstName: '', lastName: '' }])
     }
 
     // Remove a name
     const removeName = (id: string) => {
-        const newNames = names.filter(name => name.id !== id)
+        const newNames = names.filter((name) => name.id !== id)
         setNames(newNames)
     }
 
@@ -229,7 +240,7 @@ const ModalSignUp: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
                             </div>
                         )
                     })}
-                    {names.length < 5 && (
+                    {filteredRegistrations.length + names.length < maxRegistrations && (
                         <button
                             type="button"
                             className="button button-primary button-link button-small button-add"

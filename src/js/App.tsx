@@ -11,11 +11,18 @@ import { database } from './utilities/firebase'
 import Week from './Week'
 
 function App() {
-    // 1 march 2020, 11:00
-    const startDate = new Date(2020, 2, 1, 11)
+    // 1 march 2021, 11:00
+    const startDate = new Date(2021, 0, 11, 8)
 
-    // 22 march 2020, 10:00
-    const endDate = new Date(2020, 3, 5, 10)
+    // 26 march 2021, 10:00
+    const endDate = new Date(2021, 1, 27, 21)
+
+    // Constants
+    const weeklyStartDay = 0
+    const weeklyEndDay = 6
+    const dailyStartHour = 8
+    const dailyEndHour = 20
+    const maxRegistrations = 2
 
     // State
     const [registrations, setRegistrations] = useState<Registration[]>([])
@@ -33,7 +40,7 @@ function App() {
             database
                 .collection('registrations')
                 .orderBy('created', 'asc')
-                .onSnapshot(async querySnapshot => {
+                .onSnapshot(async (querySnapshot) => {
                     // Array to store registrations
                     const results = []
 
@@ -132,36 +139,41 @@ function App() {
     }
 
     // Send a reminder
-    async function sendReminder(registration: Registration) {
-        const registrationDate = new Date(registration.date.seconds * 1000)
+    // async function sendReminder(registration: Registration) {
+    //     const registrationDate = new Date(registration.date.seconds * 1000)
 
-        await database.collection('mail').add({
-            from: 'Gebedsmarathon <noreply@gebedsmarathon.nl>',
-            to: [registration.email],
-            message: {
-                messageId: 'registration-reminder',
-                subject: 'Een herinnering voor morgen',
-                text: `Beste ${
-                    registration.name
-                },\r\nHerinnering: morgen om <strong>${registrationDate.getHours()}.00 uur</strong> sta je ingeschreven voor de gebedsmarathon.\r\nWees gezegend!`,
-                html: `<p>Beste ${
-                    registration.name
-                },</p><p>Herinnering: morgen om <strong>${registrationDate.getHours()}.00 uur</strong> sta je ingeschreven voor de gebedsmarathon.</p><p>Wees gezegend!</p>`,
-            },
-        })
+    //     await database.collection('mail').add({
+    //         from: 'Gebedsmarathon <noreply@gebedsmarathon.nl>',
+    //         to: [registration.email],
+    //         message: {
+    //             messageId: 'registration-reminder',
+    //             subject: 'Een herinnering voor morgen',
+    //             text: `Beste ${
+    //                 registration.name
+    //             },\r\nHerinnering: morgen om <strong>${registrationDate.getHours()}.00 uur</strong> sta je ingeschreven voor de gebedsmarathon.\r\nWees gezegend!`,
+    //             html: `<p>Beste ${
+    //                 registration.name
+    //             },</p><p>Herinnering: morgen om <strong>${registrationDate.getHours()}.00 uur</strong> sta je ingeschreven voor de gebedsmarathon.</p><p>Wees gezegend!</p>`,
+    //         },
+    //     })
 
-        // Very important to update the flag for sending a reminder
-        await database
-            .collection('registrations')
-            .doc(registration.id)
-            .update({ needsReminder: false })
-    }
+    //     // Very important to update the flag for sending a reminder
+    //     await database
+    //         .collection('registrations')
+    //         .doc(registration.id)
+    //         .update({ needsReminder: false })
+    // }
 
     return (
         <AppContext.Provider
             value={{
                 startDate,
                 endDate,
+                dailyStartHour,
+                dailyEndHour,
+                weeklyStartDay,
+                weeklyEndDay,
+                maxRegistrations,
                 registrations,
                 setModal,
                 selectedDate,

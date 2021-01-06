@@ -25,6 +25,10 @@ const Stats: FC<{ isLoading: boolean }> = ({ isLoading }) => {
 
     const percentageOccupied = Math.ceil((hoursBusy / numberOfHours) * 100)
 
+    if (endDate.getTime() <= Date.now()) {
+        return null
+    }
+
     return (
         <div className="progress">
             {isLoading ? (

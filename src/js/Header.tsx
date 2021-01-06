@@ -16,13 +16,24 @@ const Header = () => {
         year: 'numeric',
     }).format(endDate)
 
+    console.log(endDate.getTime() < Date.now())
+
     return (
-        <header className="header">
-            <div className="header-bar">Vrije Baptistengemeente Emmen</div>
-            <h1>Gebedsmarathon</h1>
-            <h2>
-                {formattedStartDate} - {formattedEndDate}
-            </h2>
+        <header className={`header ${endDate.getTime() <= Date.now() ? `has-ended` : ``}`}>
+            <div className="header-bar">Stadskerk Emmen</div>
+            <h1>Gebedsrooster</h1>
+            {endDate.getTime() > Date.now() ? (
+                <h2>
+                    {formattedStartDate} - {formattedEndDate}
+                </h2>
+            ) : (
+                <>
+                    <h2>Bedankt voor je deelname in 2020.</h2>
+                    <p>
+                        Ga naar <a href="http://www.stadskerkemmen.nl">www.stadskerkemmen.nl</a>
+                    </p>
+                </>
+            )}
         </header>
     )
 }

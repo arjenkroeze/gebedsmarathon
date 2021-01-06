@@ -42,6 +42,18 @@
         font-size: 24px;
         font-weight: 300;
     }
+
+    a {
+        color: inherit;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+}
+
+.header.has-ended {
+    height: 100vh;
 }
 
 .header-bar {

@@ -5,14 +5,14 @@ import AppContext from './context/AppContext'
 
 const ModalRegistrations: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
     // Context
-    const { registrations, selectedDate, setModal } = useContext(AppContext)
+    const { registrations, selectedDate, maxRegistrations, setModal } = useContext(AppContext)
 
     // State
     const [filteredRegistrations, setFilteredRegistrations] = useState<Registration[]>([])
 
     // Effect to filter registrations on the selected date
     useEffect(() => {
-        const filteredRegistrations = registrations.filter(registration => {
+        const filteredRegistrations = registrations.filter((registration) => {
             const registrationDate = new Date(registration.date.seconds * 1000)
             return registrationDate.getTime() === selectedDate.getTime()
         })
@@ -49,20 +49,22 @@ const ModalRegistrations: React.FC<ModalProps> = ({ isOpen, toggleModal }) => {
                         <p className="text-muted">Nog geen inschrijvingen.</p>
                     )}
                 </div>
-                <div className="text-center">
-                    <button
-                        className="button button-primary button-link button-small"
-                        onClick={() => setModal('signup')}
-                    >
-                        Schrijf je in voor dit uur
-                    </button>
-                </div>
+                {listRegistrations.length < maxRegistrations && (
+                    <div className="text-center">
+                        <button
+                            className="button button-primary button-link button-small"
+                            onClick={() => setModal('signup')}
+                        >
+                            Schrijf je in voor dit uur
+                        </button>
+                    </div>
+                )}
             </ModalBody>
         </Modal>
     )
 }
 
-const RegistrationListItem: React.FC<Registration> = registration => {
+const RegistrationListItem: React.FC<Registration> = (registration) => {
     // Context
     const { setModal, setSelectedRegistration } = useContext(AppContext)
 
