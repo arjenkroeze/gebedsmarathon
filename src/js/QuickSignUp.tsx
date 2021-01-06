@@ -13,7 +13,14 @@ const initialValues: { [key: string]: any } = {
 
 const QuickSignUp = () => {
     // Context
-    const { startDate, endDate, setModal } = useContext(AppContext)
+    const {
+        startDate,
+        endDate,
+        dailyStartHour,
+        dailyEndHour,
+        registrations,
+        setModal,
+    } = useContext(AppContext)
 
     // State
     const [referralDate, setReferralDate] = useState(new Date())
@@ -48,7 +55,7 @@ const QuickSignUp = () => {
         )
 
         // For every day...
-        for (let j = 0; j <= numberOfDays; j++) {
+        for (let j = 0; j < numberOfDays; j++) {
             // Create a date object...
             const dayDate = new Date(referralDate)
             dayDate.setDate(dayDate.getDate() + j)
@@ -77,7 +84,7 @@ const QuickSignUp = () => {
         setDateOptions(dates)
 
         // ...and set the selectedDate to the first value in the array
-        setValues(values => ({
+        setValues((values) => ({
             ...values,
             selectedDate: dates[0].date,
         }))
@@ -97,9 +104,13 @@ const QuickSignUp = () => {
         const hours: HourOption[] = []
 
         // For every hour in a day...
-        for (let i = 0; i < 24; i++) {
+        for (let i = dailyStartHour; i <= dailyEndHour; i++) {
             // Create a Date-object
             const hourDate = new Date(dayDate.setHours(i))
+
+            if (i === 17 || i === 18) {
+                continue
+            }
 
             // Only add an option if the referralDate has not passed yet
             if (
@@ -119,14 +130,14 @@ const QuickSignUp = () => {
         setHourOptions(hours)
 
         // ...and set the selectedHour to the first item in the array
-        setValues(values => ({ ...values, selectedHour: hours[0].hour }))
-    }, [values.selectedDate, referralDate, endDate])
+        setValues((values) => ({ ...values, selectedHour: hours[0].hour }))
+    }, [values.selectedDate, referralDate, endDate, dailyStartHour, dailyEndHour])
 
     // Handle input changes
     function handleChange({
         target: { name, value },
     }: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-        setValues(values => ({ ...values, [name]: value }))
+        setValues((values) => ({ ...values, [name]: value }))
     }
 
     // Handle form submitting
@@ -139,7 +150,7 @@ const QuickSignUp = () => {
         const { firstName, lastName, email, selectedDate, selectedHour } = values
 
         // Validate names
-        if (!Object.values(values).some(value => value !== '')) {
+        if (!Object.values(values).some((value) => value !== '')) {
             setError('ERROR_INVALID_NAME')
             return
         }
